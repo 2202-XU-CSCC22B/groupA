@@ -12,10 +12,10 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          My Dashboard
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div>HRSI Form</div>
       </q-toolbar>
     </q-header>
 
@@ -28,10 +28,10 @@
         <q-item-label
           header
         >
-          Essential Links
+          Menu
         </q-item-label>
 
-        <EssentialLink
+        <MenuSide
           v-for="link in essentialLinks"
           :key="link.title"
           v-bind="link"
@@ -47,50 +47,41 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+import MenuSide from 'components/MenuSide.vue'
 
 const linksList = [
   {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
+    title: 'Home',
+    caption: '',
+    icon: 'home',
     link: 'https://quasar.dev'
   },
+
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
+    title: 'Profile',
+    caption: 'My Profile',
+    icon:  "account_circle",
+    link: 'https://quasar.dev'
+  },
+
+  {
+    title: 'Track',
+    caption: 'Check my progress',
+    icon: 'show_chart',
     link: 'https://github.com/quasarframework'
   },
   {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
+    title: 'Verify',
+    caption: 'Validate my form',
+    icon:  'check',
     link: 'https://chat.quasar.dev'
   },
   {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
+    title: 'Log out',
+    caption : '',
+    icon : 'logout',
+
+
   }
 ]
 
@@ -98,9 +89,8 @@ export default defineComponent({
   name: 'MainLayout',
 
   components: {
-    EssentialLink
+    MenuSide,
   },
-
   setup () {
     const leftDrawerOpen = ref(false)
 
