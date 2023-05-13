@@ -8,7 +8,6 @@ const app = express();
 app.use(bodyParser.json());
 
 // Connect to MongoDB
-const dbName = 
 const url = 'mongodb+srv://SLP_Property_Pass:<ExitPass123>@cluster0.xas87bl.mongodb.net/';
 const client = new MongoClient(mongoURI, { useUnifiedTopology: true });
 
