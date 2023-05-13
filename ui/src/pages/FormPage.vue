@@ -56,6 +56,30 @@
             <input type="text" v-model="others_description" placeholder="Enter description" />
             </div>
         </div>
+        <div>
+            <label>Number of items to process:</label>
+            <input type="number" v-model="number_of_items" />
+            <table>
+                <thead>
+                    <tr>
+                    <th>Item No.</th>
+                    <th>Particulars</th>
+                    <th>Property Tag</th>
+                    <th>No. of items</th>
+                    <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(input, index) in inputFields" :key="index">
+                    <td>{{ index + 1 }}</td>
+                    <td><input type="text" v-model="input.particulars" /></td>
+                    <td><input type="text" v-model="input.propertyTag" /></td>
+                    <td><input type="number" v-model="input.numberOfItems" /></td>
+                    <td><input type="number" v-model="input.amount" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </body>
 </template>
 
@@ -80,6 +104,8 @@ export default {
       borrowed_location:'',
       borrowed_return_date: null,
       others_description:'',
+      number_of_items: 0,
+      item_fields: [],
 
       
       nature: ['Sales(Scraps, MRF, Vermi, Manresa Farm products, etc.)', 'Transfer Location/Property Donation',
@@ -142,7 +168,17 @@ export default {
             console.error('Error saving data:', error);
             // Handle error case
             });
-    }
+    },
+
+    generateInputs() {
+      const numberOfInputs = parseInt(this.number_of_items);
+      this.item_fields = Array.from({ length: this.number_of_items }, () => ({
+        particulars: '',
+        propertyTag: '',
+        numberOfItems: 0,
+        amount: 0,
+      }));
+    },
   },
 };
 </script>
