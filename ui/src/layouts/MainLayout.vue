@@ -21,7 +21,7 @@
 
     <q-drawer
       v-model="leftDrawerOpen"
-      show-if-above
+      no-swipe-open
       bordered
     >
       <q-list>
@@ -54,27 +54,27 @@ const linksList = [
     title: 'Home',
     caption: '',
     icon: 'home',
-    link: 'https://quasar.dev'
+    link: ""
   },
 
   {
     title: 'Profile',
     caption: 'My Profile',
     icon:  "account_circle",
-    link: 'https://quasar.dev'
+    link: ""
   },
 
   {
     title: 'Track',
     caption: 'Check my progress',
     icon: 'show_chart',
-    link: 'https://github.com/quasarframework'
+    link: ''
   },
   {
     title: 'Verify',
     caption: 'Validate my form',
     icon:  'check',
-    link: 'https://chat.quasar.dev'
+    link: ''
   },
   {
     title: 'Log out',
