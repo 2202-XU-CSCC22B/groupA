@@ -1,27 +1,27 @@
 <template>
-  <q-layout view="hHh lpR fFf">
-    <q-page-container>
-      <router-view />
-      <q-page>
+  <q-layout>
+    <router-view />
         <!-- <img
           alt="XU Slogan"
           src="~assets/xu.jpg"
         > -->
-        <div class="wrapper">
 
-          <div class="sign-up">
+        <!-- cont -->
+        <div class="cont">
 
-            <form action="" method="post">
-              <div class="email">
-                <label for="Email">XU Email</label>
-                <q-input standout v-model="email" filled type="email" label="XU Email" />
-              </div>
+         <div class="form sign-in">
+            <!-- <h2>Login</h2> -->
 
-              <br>
+            <!-- <form action=""> -->
+              <label>
+                <span>XU Email</span>
+                <!-- <q-input v-model="email" type="email"/> -->
+                <input type="email"/>
+              </label>
 
-              <div class="password">
-                <label for="Password">Password</label>
-                <q-input standout v-model="password" label="Password" filled :type="isPwd ? 'password' : 'text'">
+              <label>
+                <span>Password</span>
+                <!-- <q-input v-model="password" :type="isPwd ? 'password' : 'text'">
                   <template v-slot:append>
                     <q-icon
                       :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -29,20 +29,91 @@
                       @click="isPwd = !isPwd"
                     />
                   </template>
-                </q-input>
+                </q-input> -->
+                <input type="password"/>
+              </label>
+
+              <p class="fgt-pass">Forgot password?</p>
+
+              <!-- <q-btn class="login" push rounded color="blue-10" size="15px" label="Login" type="submit"/> -->
+              <button type="button" class="submit">Login</button>
+
+            <!-- </form> -->
+         </div>
+
+         <div class="sub_cont">
+            <div class="img">
+              <div class="img__text m--up">
+                <h2>New User?</h2>
+                <p>Click the button below to register</p>
               </div>
 
-            </form>
+              <div class="img__text m--in">
+                <h2>Alredy Registered?</h2>
+                <p>If you have already an account, click the button to Login.</p>
+              </div>
 
+              <div class="img__btn">
+                <span class="m--up">Sign Up</span>
+                <span class="m--in">Login</span>
+              </div>
+            </div>
+
+            <div class="form sign-up">
+              <h2>Welcome!</h2>
+              <!-- <form action=""> -->
+
+                <label>
+                  <span>Name</span>
+                  <!-- <q-input v-model="text" type="text"/> -->
+                  <input type="text">
+                </label>
+
+                <label>
+                  <span>XU Email</span>
+                  <!-- <q-input v-model="email" type="email"/> -->
+                  <input type="email">
+                </label>
+
+                <label>
+                  <span>Password</span>
+                  <!-- <q-input v-model="password" :type="isPwd ? 'password' : 'text'">
+                    <template v-slot:append>
+                      <q-icon
+                        :name="isPwd ? 'visibility_off' : 'visibility'"
+                        class="cursor-pointer"
+                        @click="isPwd = !isPwd"
+                      />
+                    </template>
+                  </q-input> -->
+                  <input type="password">
+                </label>
+
+                <!-- <q-btn class="submit" push rounded color="blue-10" size="15px" label="Sign Up" type="submit"/> -->
+                <button type="button" class="submit">Sign Up</button>
+
+              <!-- </form> -->
+
+            </div>
           </div>
-
         </div>
-      </q-page>
-    </q-page-container>
+
+        <a 
+          href="https://dribbble.com/shots/3306190-Login-Registration-form"
+          target="_blank" class="icon-link">
+
+          <img src="http://icons.iconarchive.com/icons/uiconstock/socialmedia/256/Dribbble-icon.png">
+        </a>
+
   </q-layout>
 </template>
 
 <script>
+
+  document.querySelector('.img__btn').addEventListener('click', function () {
+    document.querySelector('.cont').classList.toggle('s--signup');
+  })
+
 import { ref } from 'vue'
 
 export default ({
@@ -50,34 +121,304 @@ export default ({
 
   setup() {
     return{
-      password: ref(''),
-      isPwd: ref(true),
-      email: ref('')
+      // password: ref(''),
+      // isPwd: ref(true),
+      // email: ref('')
     }
   }
 })
 </script>
 
-<style>
+<style lang="scss">
 
-.wrapper {
+*, *:before, *:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  background: #ededed;
+}
+
+input, button {
+  border: none;
+  outline: none;
+  background: none;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+}
+
+$contW: 900px;
+$imgW: 260px;
+$formW: $contW - $imgW;
+$switchAT: 1.2s;
+
+$inputW: 260px;
+$btnH: 36px;
+
+$diffRatio: ($contW - $imgW) / $contW;
+
+@mixin signUpActive {
+  .cont.s--signup & {
+    @content;
+  }
+}
+
+// .title {
+//   font-size: 20px;
+//   margin: 40px auto 50px;
+//   text-align: center;
+// }
+
+.cont {
+  overflow: hidden;
+  position: relative;
+  width: $contW;
+  height: 550px;
+  margin: 0 auto 100px;
+  background: #fff;
+}
+
+.form {
+  position: relative;
+  width: $formW;
+  height: 100%;
+  transition: transform $switchAT ease-in-out;
+  padding: 50px 30px 0;
+}
+
+.sub-cont {
+  overflow: hidden;
   position: absolute;
-  /* justify-content: center;
-  align-items: center; */
+  left: $formW;
+  top: 0;
+  width: $contW;
+  height: 100%;
+  padding-left: $imgW;
+  background: #fff;
+  transition: transform $switchAT ease-in-out;
+
+  @include signUpActive() {
+    transform: translate3d($formW * -1,0,0);
+  }
+}
+
+button {
+  display: block;
+  margin: 0 auto;
+  width: $inputW;
+  height: $btnH;
+  border-radius: 30px;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.img {
+  overflow: hidden;
+  z-index: 2;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: $imgW;
+  height: 100%;
+  padding-top: 360px;
+
+  &::before{
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: $contW;
+    height: 100%;
+    background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/sections-3.jpg');
+    background-size: cover;
+    transition: transform $switchAT ease-in-out;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+  }
+
+  @include signUpActive() {
+    &::before {
+      transform: translate3d($formW,0,0);
+    }
+  }
+
+  &__text {
+    z-index: 2;
+    position: absolute;
+    left: 0;
+    top: 50px;
+    width: 100%;
+    padding: 0 20px;
+    text-align: center;
+    color: #fff;
+    transition: transform $switchAT ease-in-out;
+
+    h2 {
+      margin-bottom: 10px;
+      font-weight: normal;
+    }
+
+    p {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    &.m--up {
+
+      @include signUpActive() {
+        transform: translateX($imgW*2);
+      }
+    }
+    
+    &.m--in {
+      transform: translateX($imgW * -2);
+
+      @include signUpActive() {
+        transform: translateX(0);
+      }
+    }
+  }
+
+  &__btn {
+    overflow: hidden;
+    z-index: 2;
+    position: relative;
+    width: 100px;
+    height: $btnH;
+    margin: 0 auto;
+    background: transparent;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 15px;
+    cursor: pointer;
+    
+    &::after {
+      content: '';
+      z-index: 2;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      border: 2px solid #fff;
+      border-radius: 30px;
+    }
+
+    span {
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      transition: transform $switchAT;
+      
+      &.m--in {
+        transform: translateY($btnH*-2);
+        
+        @include signUpActive {
+          transform: translateY(0);
+        }
+      }
+      
+      &.m--up {
+        @include signUpActive {
+          transform: translateY($btnH*2);
+        }
+      }
+    }
+  }
+}
+
+h2 {
+  width: 100%;
+  font-size: 26px;
+  text-align: center;
+}
+
+label {
+  display: block;
+  width: $inputW;
+  margin: 25px auto 0;
+  text-align: center;
+
+  span {
+    font-size: 12px;
+    color: #cfcfcf;
+    text-transform: uppercase;
+  }
+}
+
+input {
+  display: block;
+  width: 100%;
+  margin-top: 5px;
+  padding-bottom: 5px;
+  font-size: 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.4);
+  text-align: center;
+}
+
+.fgt-pass {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 12px;
+  color: #cfcfcf;
+}
+
+.submit {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  background: #283971;
+  text-transform: uppercase;
+}
+
+.sign-in {
+  transition-timing-function: ease-out;
+
+  @include signUpActive {
+    transition-timing-function: ease-in-out;
+    transition-duration: $switchAT;
+    transform: translate3d($formW,0,0);
+  }
 }
 
 .sign-up {
-  position: relative;
-  background-color: antiquewhite;
-  width: 300px;
-  height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10%;
+  transform: translate3d($contW * -1,0,0);
 
-  margin-top: 80%;
-  margin-left: 220%;
+  @include signUpActive {
+    transform: translate3d(0,0,0);
+  }
+}
+
+.icon-link {
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
+  width: 32px;
+
+  img {
+    width: 100%;
+    vertical-align: top;
+  }
+
+  // &--twitter {
+  //   left: auto;
+  //   right: 5px;
+  // }
 }
 
 </style>
