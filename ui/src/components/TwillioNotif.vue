@@ -23,9 +23,9 @@ import axios from 'axios';
     },
     methods: {
       async send() {
-        const accountSid = 'YOUR_TWILIO_ACCOUNT_SID_HERE';
-        const authToken = 'YOUR_TWILIO_AUTH_TOKEN_HERE';
-        const twilioNumber = 'YOUR_TWILIO_PHONE_NUMBER_HERE';
+        const accountSid = 'TWILIO_ACCOUNT_SID_HERE';
+        const authToken = 'TWILIO_AUTH_TOKEN_HERE';
+        const twilioNumber = 'TWILIO_PHONE_NUMBER_HERE';
   
         try {
           const response = await axios.post(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`, {
