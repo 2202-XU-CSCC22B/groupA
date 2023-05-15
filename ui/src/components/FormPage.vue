@@ -80,6 +80,9 @@
                 </tbody>
             </table>
         </div>
+        <div>
+          <button type="submit" @click="saveData">Submit</button>
+        </div>
     </body>
 </template>
 
