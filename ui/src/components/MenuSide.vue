@@ -1,10 +1,7 @@
 <template>
   <q-item
-    clickable
-    tag="a"
-    target="_blank"
-    :href="link"
-  >
+   clickable
+   :to="to">
     <q-item-section
       v-if="icon"
       avatar
@@ -35,7 +32,7 @@ export default defineComponent({
       default: ''
     },
 
-    link: {
+    to: {
       type: String,
       default: '#'
     },

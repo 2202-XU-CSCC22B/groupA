@@ -32,9 +32,9 @@
         </q-item-label>
 
         <MenuSide
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
+          v-for="to in essentialLinks"
+          :key="to.title"
+          v-bind="to"
         />
       </q-list>
     </q-drawer>
@@ -54,33 +54,33 @@ const linksList = [
     title: 'Home',
     caption: '',
     icon: 'home',
-    link: ""
+    to : '/',
   },
 
   {
     title: 'Profile',
     caption: 'My Profile',
     icon:  "account_circle",
-    link: ""
+    to : '/profile',
   },
 
   {
     title: 'Track',
     caption: 'Check my progress',
     icon: 'show_chart',
-    link: ''
+    to : '/track',
   },
   {
     title: 'Verify',
     caption: 'Validate my form',
     icon:  'check',
-    link: ''
+    to : '/verify',
   },
   {
     title: 'Log out',
     caption : '',
     icon : 'logout',
-
+    to : '/logout',
 
   }
 ]
