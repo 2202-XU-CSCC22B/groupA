@@ -25,11 +25,13 @@
       bordered
     >
       <q-list>
+        <menu-header>
         <q-item-label
           header
         >
           Menu
         </q-item-label>
+      </menu-header>
 
         <MenuSide
           v-for="to in essentialLinks"
