@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-// const Router = require("./routes");
+const Router = require("./routes");
 
 const PORT = 3000;
 
@@ -26,7 +26,7 @@ db.once("open", function () {
 });
 
 app.use(express.json());
-// app.use(Router);
+app.use(Router);
 
 // for Mac
 app.get('/', (req, res) => {

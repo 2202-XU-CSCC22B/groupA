@@ -1,16 +1,11 @@
 <template>
   <q-layout>
     <router-view />
-        <!-- <img
-          alt="XU Slogan"
-          src="~assets/xu.jpg"
-        > -->
 
         <!-- cont -->
         <div class="cont">
 
          <div class="form sign-in">
-            <!-- <h2>Login</h2> -->
 
             <!-- <form action=""> -->
               <label>
@@ -157,19 +152,13 @@ $switchAT: 1.2s;
 $inputW: 260px;
 $btnH: 36px;
 
-$diffRatio: ($contW - $imgW) / $contW;
+$diffRatio: calc(($contW - $imgW)/$contW);
 
 @mixin signUpActive {
   .cont.s--signup & {
     @content;
   }
 }
-
-// .title {
-//   font-size: 20px;
-//   margin: 40px auto 50px;
-//   text-align: center;
-// }
 
 .cont {
   overflow: hidden;
@@ -277,7 +266,7 @@ button {
     &.m--up {
 
       @include signUpActive() {
-        transform: translateX($imgW*2);
+        transform: translateX($imgW * 2);
       }
     }
     
@@ -327,7 +316,7 @@ button {
       transition: transform $switchAT;
       
       &.m--in {
-        transform: translateY($btnH*-2);
+        transform: translateY($btnH * -2);
         
         @include signUpActive {
           transform: translateY(0);
@@ -336,7 +325,7 @@ button {
       
       &.m--up {
         @include signUpActive {
-          transform: translateY($btnH*2);
+          transform: translateY($btnH * 2);
         }
       }
     }
@@ -414,11 +403,6 @@ input {
     width: 100%;
     vertical-align: top;
   }
-
-  // &--twitter {
-  //   left: auto;
-  //   right: 5px;
-  // }
 }
 
 </style>

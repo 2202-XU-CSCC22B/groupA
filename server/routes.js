@@ -4,14 +4,23 @@ const app = express();
 
 //stuff!
 app.post("/add_signuplogin", async (request, response) => {
-    const pass = new SignUp_Login(request.body);
+    const { username, email, password } = request.body;
 
     try {
-      await pass.save();
-      response.send(pass);
+        const existingUser = await SignUp_Login.findOne({ $or: [{ username }, { email }] });
+
+        if (existingUser) {
+        return response.status(400).json({ error: 'Username or email already exists' });
+        }
+
+        // Create a new user
+        const newUser = new SignUp_Login({ username, email, password });
+        await newUser.save();
+
+        return response.status(201).json({ message: 'User created successfully' });
     } catch (error) {
-      console.log(error);
-      response.status(500).send({error: error.message});
+        console.error(error);
+        return response.status(500).json({ error: 'Server error' });
     }
 })
 
