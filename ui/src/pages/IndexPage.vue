@@ -90,6 +90,10 @@ export default ({
   font-family: "Poppins", sans-serif;
 }
 
+body {
+  min-height: 100vh;
+}
+
 
 </style>
 

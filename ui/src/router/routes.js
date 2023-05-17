@@ -4,7 +4,12 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') }
+      
+    //  path: '/profile', component: () => import('pages/ProfilePage.vue'), 
+        {path: '/track', component: () => import('components/TrackBox.vue')},
+        {path: '/verify', component: () => import('components/VerifyBox.vue')}
+    //  path: '/logout', component: () => import('pages/LogoutPage.vue'),
+      
     ]
   },
 
@@ -14,6 +19,7 @@ const routes = [
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')
   }
+
 ]
 
 export default routes
