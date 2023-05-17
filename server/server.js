@@ -5,10 +5,9 @@ const Router = require("./routes");
 
 const PORT = 3000;
 
-const user = "SLP_Property_Pass";
-const pass = "ExitPass123";
-const cluster = "Cluster0";
-const name = "sample_mflix";
+// Connect to MongoDB
+const url = 'mongodb+srv://SLP_Property_Pass:ExitPass123@cluster0.xas87bl.mongodb.net/';
+const client = new MongoClient(mongoURI, { useUnifiedTopology: true });
 
 // Connection to the MongoDB database
 mongoose.connect(
