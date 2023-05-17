@@ -13,7 +13,7 @@
           <img src="~assets/backImg.jpg" alt="">
           <div class="text">
             <span class="text-1">Veritas. Liberabit. <br> Vos.</span>
-            <span class="text-2">Xavier University - Aterneo de Cagayan</span>
+            <span class="text-2">Xavier University - Ateneo de Cagayan</span>
           </div>
         </div>
 
@@ -48,9 +48,13 @@
 
                       <div class="text"><a href="#">Forgot password?</a></div>
 
+                      
+                    <router-link to="/dashboard">
                       <div class="button input-box">
                         <input type="submit" value="Submit">
                       </div>
+                    </router-link>
+
 
                       <div class="text sign-up-text">Don't have an account? <label for="flip">Sigup now</label></div>
                     </div>
