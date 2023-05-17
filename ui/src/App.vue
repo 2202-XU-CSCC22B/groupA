@@ -16,12 +16,4 @@ export default defineComponent({
 
 <style>
 
-/* .container {
-  background-image: url(~assets/XU-Seal.png);
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: 40%;
-  background-attachment: fixed;
-} */
-
 </style>
