@@ -2,11 +2,19 @@
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('pages/IndexPage.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') }
+      
+    //  path: '/profile', component: () => import('pages/ProfilePage.vue'),
+        
+        {path: '/track', component: () => import('components/TrackBox.vue')},
+        {path: '/verify', component: () => import('components/VerifyBox.vue')}
+    //  path: '/logout', component: () => import('pages/LogoutPage.vue'),
+      
     ]
   },
+
+  {path: '/dashboard', component: () => import('layouts/MainLayout.vue')},
 
   // Always leave this as last one,
   // but you can also remove it
@@ -14,6 +22,7 @@ const routes = [
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')
   }
+
 ]
 
 export default routes
