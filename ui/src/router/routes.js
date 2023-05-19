@@ -6,7 +6,6 @@ const routes = [
   },
 
   {path: '/track', component: () => import('components/TrackBox.vue')},
-  {path: '/verify', component: () => import('components/TwilioNotif.vue')},
   {path: '/dashboard', component: () => import('layouts/MainLayout.vue')},
   
 

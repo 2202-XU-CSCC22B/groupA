@@ -60,7 +60,6 @@
         <q-stepper-navigation>
           <q-btn @click="step = 5" color="primary" label="Continue" />
           <q-btn flat @click="step = 3" color="primary" label="Back" class="q-ml-sm" />
-          <q-btn flat @click="sendSMS" color="primary" label="Remind the current Approver" class="q-ml-sm" />
         </q-stepper-navigation>
       </q-step>
 
