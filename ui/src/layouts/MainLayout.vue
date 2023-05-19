@@ -65,6 +65,11 @@ const linksList = [
     icon:  "account_circle",
     to : '/profile',
   },
+  {
+    title: 'Form',
+    caption:'Create Form',
+    to:'/form',
+  },
 
   {
     title: 'Track',
@@ -85,6 +90,7 @@ const linksList = [
     to : '/logout',
 
   }
+
 ]
 
 export default defineComponent({

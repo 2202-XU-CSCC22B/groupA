@@ -98,7 +98,7 @@ import DatePick from 'vue-date-pick';
 export default {
   name: 'FormPage',
   components: {
-    Multiselect, DatePick, axios
+    Multiselect, DatePick
   },
   data() {
     return {
