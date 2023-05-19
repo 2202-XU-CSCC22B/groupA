@@ -2,7 +2,8 @@
 const routes = [
   {
     path: '/',
-    component: () => import('pages/IndexPage.vue'),
+    component: () => import('pages/IndexPage.vue'), 
+    component: () => import('components/FormPage.vue')
   },
 
   {path: '/track', component: () => import('components/TrackBox.vue')},

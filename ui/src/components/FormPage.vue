@@ -94,9 +94,9 @@
 <script>
 import Multiselect from 'vue-multiselect';
 import DatePick from 'vue-date-pick';
-import axios from 'axios';
 
 export default {
+  name: 'FormPage',
   components: {
     Multiselect, DatePick, axios
   },
@@ -169,33 +169,6 @@ export default {
       if (currentPositionValue < 0) {
         this.currentPosition = `${currentPositionValue + this.slideWidth}px`;
       }
-    },
-
-    saveData(){
-        const data = {
-        selectedTransaction: this.selectedTransaction,
-        salesOfficialReceipt: this.sales_official_receipt,
-        transferFrom: this.transfer_from,
-        transferTo: this.transfer_to,
-        transferFormNumber: this.transfer_form_number,
-        repairWarranty: this.repair_warranty,
-        repairCompany: this.repair_company,
-        borrowedLocation: this.borrowed_location,
-        borrowedReturnDate: this.borrowed_return_date,
-        othersDescription: this.others_description,
-        file: this.file,
-        };
-
-        axios
-            .post('/api/save-data', data)
-            .then((response) => {
-            console.log('Data saved successfully:', response.data);
-            // Handle success case
-            })
-            .catch((error) => {
-            console.error('Error saving data:', error);
-            // Handle error case
-            });
     },
 
     generateInputs() {
