@@ -31,8 +31,10 @@
         <q-stepper-navigation>
           <q-btn @click="step = 3" color="primary" label="Continue" />
           <q-btn flat @click="step = 1" color="primary" label="Back" class="q-ml-sm" />
+          <q-btn flat @click="sendSMS" color="primary" label="Remind the current Approver" class="q-ml-sm" />
         </q-stepper-navigation>
       </q-step>
+
 
       <q-step
         :name="3"
@@ -43,7 +45,8 @@
       >
         <q-stepper-navigation>
           <q-btn @click="step = 4" color="primary" label="Continue" />
-          <q-btn flat @click="step = 3" color="primary" label="Back" class="q-ml-sm" />
+          <q-btn flat @click="step = 2" color="primary" label="Back" class="q-ml-sm" />
+          <q-btn flat @click="sendSMS" color="primary" label="Remind the current Approver" class="q-ml-sm" />
         </q-stepper-navigation>
       </q-step>
 
@@ -56,7 +59,8 @@
       >
         <q-stepper-navigation>
           <q-btn @click="step = 5" color="primary" label="Continue" />
-          <q-btn flat @click="step = 4" color="primary" label="Back" class="q-ml-sm" />
+          <q-btn flat @click="step = 3" color="primary" label="Back" class="q-ml-sm" />
+          <q-btn flat @click="sendSMS" color="primary" label="Remind the current Approver" class="q-ml-sm" />
         </q-stepper-navigation>
       </q-step>
 
@@ -86,6 +90,43 @@ export default {
     return {
       step: ref(1)
     }
-  }
+  },
+
+  methods: {
+
+    sendSMS() {
+      const phoneNumber = '+639358403712'; 
+      const message = 'Good day! There is a pending HRSI form that needs your attention.';
+
+      
+      const accountSid = 'ACc482a44e914ba27f3af09bab31fc6e4c';
+      const authToken = 'f95b99ed53499e65ef6b21297cdeff70';
+
+      
+      fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: 'Basic ' + btoa(`${accountSid}:${authToken}`),
+        },
+        body: new URLSearchParams({
+          To: phoneNumber,
+          From: '+1254 4420867', // Replace with your Twilio phone number
+          Body: message,
+        }),
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log('SMS sent successfully!');
+          } else {
+            console.error('Failed to send SMS:', response.statusText);
+          }
+        })
+        .catch((error) => {
+          console.error('Error sending SMS:', error);
+        });
+    }
+}
+
 }
 </script>
