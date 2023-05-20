@@ -1,5 +1,9 @@
 <template>
   <div class="form-container">
+    <div class = title>
+      Property Pass Form
+    </div>
+    
     <div class="part1">
       <label class="form-label">Nature of Transaction:</label>
       <q-select
@@ -11,16 +15,14 @@
       />
 
       <div v-if="selectedTransaction.includes('sales')" class="transaction-details">
-        <p class="selected-transaction">Selected Transaction: {{ selectedTransaction }}</p>
         <label class="form-label">Official Receipt No:</label>
         <input type="text" v-model="sales_official_receipt" class="form-input" />
 
-        <label class="form-label">Upload XU Official Receipt:</label>
-        <input type="file" @change="handleFileChange" class="form-input" />
+        <label class="form-label">XU Official Receipt:</label>
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('transfer_loc')" class="transaction-details">
-        <p class="selected-transaction">Selected Transaction: {{ selectedTransaction }}</p>
         <label class="form-label">From:</label>
         <input type="text" v-model="transfer_from" class="form-input" />
 
@@ -30,39 +32,33 @@
         <label class="form-label">Transfer Form No:</label>
         <input type="text" v-model="transfer_form_number" class="form-input" />
 
-        <label class="form-label">Upload Accomplished Transfer Form w/ MR:</label>
-        <input type="file" @change="handleFileChange" class="form-input" />
+        <label class="form-label">Accomplished Transfer Form w/ MR:</label>
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('repair_replacement')" class="transaction-details">
-        <p class="selected-transaction">Selected Transaction: {{ selectedTransaction }}</p>
-
         <label class="form-label">Warranty availability:</label>
         <q-select v-model="repair_warranty" :options="repair_or_replacement" class="form-select" />
 
         <label class="form-label">Company:</label>
         <input type="text" v-model="repair_company" placeholder="Enter company" class="form-input" />
 
-        <label class="form-label">Upload Assessment from CISO or PPO:</label>
-        <input type="file" @change="handleFileChange" class="form-input" />
+        <label class="form-label">Assessment from CISO or PPO:</label>
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('borrowed')" class="transaction-details">
-        <p class="selected-transaction">Selected Transaction: {{ selectedTransaction }}</p>
-
         <label class="form-label">Location:</label>
         <input type="text" v-model="borrowed_location" placeholder="Enter full address" class="form-input" />
 
         <label class="form-label">Date item returned:</label>
         <input type="date" v-model="borrowed_return_date" class="form-input" />
 
-        <label class="form-label">Upload Request to Borrow Form:</label>
-        <input type="file" @change="handleFileChange" class="form-input" />
+        <label class="form-label">Request to Borrow Form:</label>
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('others')" class="transaction-details">
-        <p class="selected-transaction">Selected Transaction: {{ selectedTransaction }}</p>
-
         <label class="form-label">Input your nature of transaction:</label>
         <input type="text" v-model="others_description" placeholder="Enter description" class="form-input" />
       </div>
@@ -176,6 +172,11 @@ export default {
   gap: 20px;
 }
 
+.title{
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
 .form-label {
   font-weight: bold;
   margin-bottom: 5px;
