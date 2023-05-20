@@ -1,117 +1,115 @@
 <template>
-  <div class="part1">
-    <label>Nature of Transaction:</label>
-    <q-select
-      v-model="selectedTransaction"
-      :options="nature"
-      emit-value
-      map-options />
+  <div class="form-container">
+    <div class="part1">
+      <label class="form-label">Nature of Transaction:</label>
+      <q-select
+        v-model="selectedTransaction"
+        :options="nature"
+        emit-value
+        map-options
+        class="form-select"
+      />
 
-    <div v-if="selectedTransaction.includes('sales')">
-      <p>Selected Transaction: {{ selectedTransaction }}</p><br>
-      <label>Official Receipt No:</label><br>
-      <input type="text" v-model="sales_official_receipt" /><br>
+      <div v-if="selectedTransaction.includes('sales')" class="transaction-details">
+        <p class="selected-transaction">Selected Transaction: {{ selectedTransaction }}</p>
+        <label class="form-label">Official Receipt No:</label>
+        <input type="text" v-model="sales_official_receipt" class="form-input" />
 
-      <label>Upload XU Official Receipt:</label><br>
-      <input type="file" @change="handleFileChange" />
+        <label class="form-label">Upload XU Official Receipt:</label>
+        <input type="file" @change="handleFileChange" class="form-input" />
+      </div>
+
+      <div v-if="selectedTransaction.includes('transfer_loc')" class="transaction-details">
+        <p class="selected-transaction">Selected Transaction: {{ selectedTransaction }}</p>
+        <label class="form-label">From:</label>
+        <input type="text" v-model="transfer_from" class="form-input" />
+
+        <label class="form-label">To:</label>
+        <input type="text" v-model="transfer_to" class="form-input" />
+
+        <label class="form-label">Transfer Form No:</label>
+        <input type="text" v-model="transfer_form_number" class="form-input" />
+
+        <label class="form-label">Upload Accomplished Transfer Form w/ MR:</label>
+        <input type="file" @change="handleFileChange" class="form-input" />
+      </div>
+
+      <div v-if="selectedTransaction.includes('repair_replacement')" class="transaction-details">
+        <p class="selected-transaction">Selected Transaction: {{ selectedTransaction }}</p>
+
+        <label class="form-label">Warranty availability:</label>
+        <q-select v-model="repair_warranty" :options="repair_or_replacement" class="form-select" />
+
+        <label class="form-label">Company:</label>
+        <input type="text" v-model="repair_company" placeholder="Enter company" class="form-input" />
+
+        <label class="form-label">Upload Assessment from CISO or PPO:</label>
+        <input type="file" @change="handleFileChange" class="form-input" />
+      </div>
+
+      <div v-if="selectedTransaction.includes('borrowed')" class="transaction-details">
+        <p class="selected-transaction">Selected Transaction: {{ selectedTransaction }}</p>
+
+        <label class="form-label">Location:</label>
+        <input type="text" v-model="borrowed_location" placeholder="Enter full address" class="form-input" />
+
+        <label class="form-label">Date item returned:</label>
+        <input type="date" v-model="borrowed_return_date" class="form-input" />
+
+        <label class="form-label">Upload Request to Borrow Form:</label>
+        <input type="file" @change="handleFileChange" class="form-input" />
+      </div>
+
+      <div v-if="selectedTransaction.includes('others')" class="transaction-details">
+        <p class="selected-transaction">Selected Transaction: {{ selectedTransaction }}</p>
+
+        <label class="form-label">Input your nature of transaction:</label>
+        <input type="text" v-model="others_description" placeholder="Enter description" class="form-input" />
+      </div>
+
     </div>
 
-    <div v-if="selectedTransaction.includes('transfer_loc')">
-      <p>Selected Transaction: {{ selectedTransaction }}</p><br>
-      <label>From:</label><br>
-      <input type="text" v-model="transfer_from" /><br>
+    <div class="part2">
+      <table class="item-table">
+        <thead>
+          <tr>
+            <th>Item No.</th>
+            <th>Particulars</th>
+            <th>Property Tag</th>
+            <th>No. of items</th>
+            <th>Amount</th>
+            <th>Action</th>
+          </tr>
+        </thead>
 
-      <label>To:</label><br>
-      <input type="text" v-model="transfer_to" /><br>
+        <tbody>
+          <tr v-for="(item, index) in item_fields" :key="index">
+            <td>{{ index + 1 }}</td>
+            <td>
+              <input type="text" v-model="item.particulars" class="form-input" />
+            </td>
+            <td>
+              <input type="text" v-model="item.propertyTag" class="form-input" />
+            </td>
+            <td>
+              <input type="number" v-model="item.quantity" class="form-input" />
+            </td>
+            <td>
+              <input type="number" v-model="item.amount" class="form-input" />
+            </td>
+            <td>
+              <button @click="removeItem(index)" class="remove-button">Remove</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-      <label>Transfer Form No:</label><br>
-      <input type="text" v-model="transfer_form_number" /><br>
-
-      <label>Upload Accomplished Transfer Form w/ MR:</label><br>
-      <input type="file" @change="handleFileChange" />
+      <button @click="addItem" class="add-button">Add Item</button>
     </div>
 
-    <div v-if="selectedTransaction.includes('repair_replacement')">
-      <p>Selected Transaction: {{ selectedTransaction }}</p><br>
-
-      <label>Warranty availability:</label>
-      <q-select v-model="repair_warranty" :options="repair_or_replacement"></q-select>
-      <br>
-
-      <label>Company:</label><br>
-      <input type="text" v-model="repair_company" placeholder="Enter company" /><br>
-
-      <label>Upload Assessment from CISO or PPO:</label><br>
-      <input type="file" @change="handleFileChange" />
+    <div class="submit">
+      <button type="submit" @click="slideNext" class="submit-button">Submit</button>
     </div>
-
-    <div v-if="selectedTransaction.includes('borrowed')">
-      <p>Selected Transaction: {{ selectedTransaction }}</p><br>
-
-      <label>Location:</label><br>
-      <input type="text" v-model="borrowed_location" placeholder="Enter full address" /><br>
-
-      <label>Date item returned:</label>
-      <input type="text" v-model="borrowed_return_date" placeholder="Enter full address" /><br>
-
-      <label>Upload Request to Borrow Form:</label><br>
-      <input type="file" @change="handleFileChange" />
-    </div>
-
-    <div v-if="selectedTransaction.includes('others')">
-      <p>Selected Transaction: {{ selectedTransaction }}</p><br>
-
-      <label>Input your nature of transaction:</label><br>
-      <input type="text" v-model="others_description" placeholder="Enter description" />
-    </div>
-
-    <button type="next" @click="slideNext">Next</button>
-  </div>
-
-  <div class="part2">
-    <table>
-      <thead>
-      <tr>
-        <th>Item No.</th>
-        <th>Particulars</th>
-        <th>Property Tag</th>
-        <th>No. of items</th>
-        <th>Amount</th>
-      </tr>
-      </thead>
-
-      <tbody>
-      <tr v-for="(item, index) in item_fields" :key="index">
-        <td>{{ index + 1 }}</td>
-
-        <td>
-          <input type="text" v-model="item.particulars" />
-        </td>
-
-        <td>
-          <input type="text" v-model="item.propertyTag" />
-        </td>
-
-        <td>
-          <input type="number" v-model="item.quantity" />
-        </td>
-
-        <td>
-          <input type="number" v-model="item.amount" />
-        </td>
-
-        <td>
-          <button @click="removeItem(index)">Remove</button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-
-    <button @click="addItem">Add Item</button>
-  </div>
-
-  <div class="submit">
-    <button type="submit" @click="slideNext">Submit</button>
   </div>
 </template>
 
@@ -170,3 +168,83 @@ export default {
   }
 };
 </script>
+<style scoped>
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.form-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-select {
+  width: 300px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.transaction-details {
+  margin-top: 20px;
+}
+
+.selected-transaction {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.part2{
+  width:100%;
+  display: block;
+  overflow: auto;
+}
+
+.item-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.item-table th,
+.item-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+.remove-button {
+  padding: 5px 10px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-button {
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+</style>
