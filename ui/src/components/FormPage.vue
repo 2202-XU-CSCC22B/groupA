@@ -1,4 +1,4 @@
-template>
+<template>
   <div class="part1">
     <label>Nature of Transaction:</label>
     <q-select
