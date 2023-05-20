@@ -3,7 +3,7 @@
       <div class="slider-content" :style="{ left: currentPosition }">
         <div class="slide">
           <label>Nature of Transaction:</label>
-          <v-select v-model="selectedTransaction" :options="nature"></v-select>
+          <q-select v-model="selectedTransaction" :options="nature"></q-select>
   
           <div v-if="selectedTransaction.includes('sales')">
             <label>Official Receipt No.:</label>
@@ -25,7 +25,7 @@
   
           <div v-if="selectedTransaction.includes('repair_replacement')">
             <label>Warranty availability:</label>
-            <v-select v-model="repair_warranty" :options="repair_or_replacement"></v-select>
+            <q-select v-model="repair_warranty" :options="repair_or_replacement"></q-select>
             <label>Company:</label>
             <input type="text" v-model="repair_company" placeholder="Enter company" />
             <label>Upload Assessment from CISO or PPO:</label>
@@ -81,13 +81,12 @@
 </template>
 
 <script>
-import VSelect from 'v-select';
+
 import DatePick from 'vue-date-pick';
 
 export default {
   name: 'FormPage',
   components: {
-    VSelect,
     DatePick
   },
   data() {
@@ -176,36 +175,3 @@ export default {
 }
 };
 </script>
-
-<style>
-.slider-container {
-  width: 400px;
-  height: 200px;
-  overflow: hidden;
-  position: relative;
-}
-
-.slider-content {
-  width: 400%;
-  height: 100%;  
-  display: flex;
-  transition: left 0.5s;
-}
-
-.slide {
-  width: 25%;
-  height: 100%;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-}
-
-.slide button {
-  margin-top: 10px;
-}
-</style>		
