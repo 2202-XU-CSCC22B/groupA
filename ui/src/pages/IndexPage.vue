@@ -38,20 +38,20 @@
                     <div class="input-boxes">
                       <div class="input-box">
                         <i class="fas fa-envelope"></i>
-                        <input type="text" placeholder="Enter your email" required>
+                        <input v-model="email" type="email" placeholder="Enter your email" required>
                       </div>
 
                       <div class="input-box">
                         <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="Enter your password" required>
+                        <input v-model="password" type="password" placeholder="Enter your password" required>
                       </div>
 
                       <div class="text"><a href="#">Forgot password?</a></div>
 
-                      
+                      <!-- LOGIN BUTTON -->
                     <router-link to="/dashboard">
                       <div class="button input-box">
-                        <input type="submit" value="Submit">
+                        <input type="submit" value="Submit" @click="Login_Button">
                       </div>
                     </router-link>
 
@@ -106,11 +106,48 @@
 
 <script>
 
-// import { ref } from 'vue'
+import { ref } from 'vue'
 
-export default ({
-  name: 'IndexPage'
-})
+import axios from 'axios'; // Importing axios directly
+// import { response } from 'express'; // Commented out as it's not used
+
+export default {
+  name: 'IndexPage',
+  data() {
+    return {
+      email: '',
+      password: ''
+    };
+  },
+  methods: {
+    async login() {
+      try {
+        const response = await axios.get('/login', {
+          params: {
+            email: this.email,
+            password: this.password
+          }
+        });
+
+        const { data } = response;
+
+        if (response.status === 200) {
+          // Login successful
+          console.log(data.message);
+          // Proceed with next code...
+        } else if (response.status === 401) {
+          // Email or password incorrect
+          console.log(data.message);
+        } else if (response.status === 404) {
+          // Email not found
+          console.log(data.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
+};
 </script>
 
 
