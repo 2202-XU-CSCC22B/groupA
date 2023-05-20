@@ -1,4 +1,5 @@
 <template>
+<div class="image-container"></div>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
@@ -18,7 +19,6 @@
         <div>HRSI Form</div>
       </q-toolbar>
     </q-header>
-
     <q-drawer
       v-model="leftDrawerOpen"
       no-swipe-open
@@ -113,3 +113,22 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+ .image-container {
+    background-image: url('assets/back.jpg');
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+  }
+
+.q-header {
+    background-color: #283971;
+  }
+</style>
+
+
