@@ -66,7 +66,8 @@
     </div>
 
     <div class="part2">
-      <table class="item-table">
+      <div class="table-container">
+        <table class="item-table">
         <thead>
           <tr>
             <th>Item No.</th>
@@ -100,6 +101,8 @@
         </tbody>
       </table>
 
+      
+      </div>
       <button @click="addItem" class="add-button">Add Item</button>
     </div>
 
@@ -206,12 +209,17 @@ export default {
 .part2{
   width:100%;
   display: block;
-  overflow: auto;
+  overflow-y: auto;
 }
 
+.table-container{
+  max-height: 300px;
+  overflow-y: auto; 
+}
 .item-table {
   width: 100%;
   border-collapse: collapse;
+  overflow-y: auto;
 }
 
 .item-table th,
