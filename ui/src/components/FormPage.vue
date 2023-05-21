@@ -107,13 +107,14 @@
     </div>
 
     <div class="submit">
-      <button type="submit" @click="slideNext" class="submit-button">Submit</button>
+      <button type="submit" @click="saveData" class="submit-button">Submit</button>
     </div>
   </div>
 </template>
 
 <script>
 import { QSelect } from "quasar";
+import axios from 'axios';
 
 export default {
   name: "FormPage",
@@ -134,8 +135,7 @@ export default {
       others_description: "",
       number_of_items: 0,
       item_fields: [],
-      currentPosition: "0px",
-      slideWidth: 0,
+    
       nature: [
         { label: "Sales (Scraps, MRF, Vermi, Manresa Farm products, etc.)", value: "sales" },
         { label: "Transfer Location / Property Donation", value: "transfer_loc" },
@@ -151,7 +151,12 @@ export default {
   },
   methods: {
     handleFileChange(event) {
-      this.file = event.target.files[0];
+      const file = event.target.files[0];
+      this.file = {
+        filename: file.name,
+        mimetype: file.type,
+        data: file.data // Assuming you have access to the file data in this form
+      };
     },
     addItem() {
       this.item_fields.push({
@@ -163,6 +168,34 @@ export default {
     },
     removeItem(index) {
       this.item_fields.splice(index, 1);
+    },
+    saveData(){
+      const formData = {
+        selectedTransaction: this.selectedTransaction,
+        sales_official_receipt: this.sales_official_receipt,
+        transfer_from: this.transfer_from,
+        transfer_to: this.transfer_to,
+        transfer_form_number: this.transfer_form_number,
+        repair_warranty: this.repair_warranty,
+        repair_company: this.repair_company,
+        borrowed_location: this.borrowed_location,
+        borrowed_return_date: this.borrowed_return_date,
+        others_description: this.others_description,
+        file: this.file,
+        item_fields: this.item_fields
+      };
+
+      axios.post("/api/submit", formData)
+        .then((response) => {
+          // Handle successful form submission
+          console.log(response.data);
+          // Optionally, you can navigate to the CheckForm page here
+          // Example: this.$router.push('/check-form');
+        })
+        .catch((error) => {
+          // Handle form submission error
+          console.error(error);
+        });
     }
   }
 };
