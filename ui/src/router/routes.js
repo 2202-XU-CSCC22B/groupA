@@ -1,7 +1,11 @@
 
 const routes = [
-  {path: '/', component: () => import('pages/IndexPage.vue')},
-  //{path : '/profile', component : () => import ('components/Profile.vue')},
+  {
+    path: '/', 
+    component: () => import('pages/IndexPage.vue'),
+    
+  },
+
   {path: '/track', component: () => import('components/TrackBox.vue')},
   {path: '/dashboard', component: () => import('layouts/MainLayout.vue')},
   {path: '/form', component: () => import('components/FormPage.vue')},

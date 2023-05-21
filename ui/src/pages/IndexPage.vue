@@ -47,11 +47,13 @@
                       </div>
 
                       <div class="text"><a href="#">Forgot password?</a></div>
+                      
+                      <p v-if="errorMsg" style="color: red; font-weight: 500;">{{ errorMsg }}</p>
 
                       <!-- LOGIN BUTTON -->
-                    <router-link to="/dashboard">
+                    <router-link :to="loggedIn ? '/dashboard' : ''">
                       <div class="button input-box">
-                        <input type="submit" value="Submit" @click="Login_Button">
+                        <input type="submit" value="Submit" @click="login">
                       </div>
                     </router-link>
 
@@ -63,7 +65,7 @@
             </div>
 
             <div class="signup-form">
-              <div class="title">Signup</div>
+              <div class="title">Register</div>
                 
               <form action="#">
                 <div class="input-boxes">
@@ -108,45 +110,67 @@
 
 import { ref } from 'vue'
 
-import axios from 'axios'; // Importing axios directly
+import {api} from 'boot/axios-config.js'; // Importing axios directly
 // import { response } from 'express'; // Commented out as it's not used
 
 export default {
   name: 'IndexPage',
   data() {
     return {
+      loggedIn: false,
       email: '',
-      password: ''
+      password: '',
+      errorMsg: '',
     };
   },
   methods: {
-    async login() {
-      try {
-        const response = await axios.get('/login', {
-          params: {
-            email: this.email,
-            password: this.password
-          }
-        });
+    async handleLogin() {
+    const loginResult = await this.login();
 
-        const { data } = response;
-
-        if (response.status === 200) {
-          // Login successful
-          console.log(data.message);
-          // Proceed with next code...
-        } else if (response.status === 401) {
-          // Email or password incorrect
-          console.log(data.message);
-        } else if (response.status === 404) {
-          // Email not found
-          console.log(data.message);
+    if (loginResult) {
+      // Proceed with the redirection
+      this.$router.push('/dashboard');
+    } else {
+      // Display an error message or handle the failed login scenario
+      console.log('Login failed. Please try again.');
+    }
+  },
+    
+  async login() {
+    try {
+      const response = await api.get('api/login', {
+        params: {
+          email: this.email,
+          password: this.password
         }
-      } catch (error) {
-        console.error(error);
+      });
+
+      const { data } = response;
+
+      if (response.status === 200) {
+        // Login successful
+        this.$router.push('/dashboard');
+        console.log(data.message);
+        return true;
+        // Proceed with next code...
+      } else if (response.status === 401) {
+        alert(data.message);
+        console.log(data.message);
+        return false;
+
+      } else if (response.status === 404) {
+        alert(data.message);
+        console.log(data.message);
+        return false;
       }
+      
+    } catch (error) {
+      this.errorMsg = "Invalid username or password.";
+      console.error(error);
+      return false;
     }
   }
+}
 };
 </script>
 
@@ -163,7 +187,8 @@ export default {
 }
 
 body{
-  min-height: 100vh;
+  width: 90%;
+  height: 90%;
   display: flex;
   align-items: center;
   justify-content: center;

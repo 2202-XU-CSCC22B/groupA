@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "cors": "^2.8.5",
     "mon": "^0.0.8",
     "node": "^20.1.0",
     "nodemon": "^2.0.22"

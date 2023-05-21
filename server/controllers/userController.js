@@ -1,28 +1,52 @@
-const { getDb } = require('../database');
+const User = require("../models/userModel");
 
-const createUser = async (user) => {
-  const db = getDb();
-  const result = await db.collection('users').insertOne(user);
-  return result.insertedId;
-};
+const createUser = async (request, response) => {
+  const { username, email, password } = request.body;
 
-const findUserByEmail = async (email, password) => {
-  const db = getDb();
-  const user = await db.collection('users').findOne({ email });
+  try {
+      const existingUser = await User.findOne({ $or: [{ username }, { email }] });
 
-  if (!user) {
-    return false; // Email not found in the database
-  }
+      if (existingUser) {
+      return response.status(400).json({ error: 'Username or email already exists' });
+      }
 
-  // Check if email and password match
-  const storedPassword = user.password; // Assuming the password is stored in the user object
+      // Create a new user
+      const newUser = new User({ username, email, password });
+      await newUser.save();
 
-  if (storedPassword === password) {
-    return user; // Email and password match, proceed with next code
-  } else {
-    return "Email or password incorrect!"; // Email found, but password is incorrect
+      return response.status(201).json({ message: 'User created successfully' });
+  } catch (error) {
+      console.error(error);
+      return response.status(500).json({ error: 'Server error' });
   }
 };
+
+const findUserByEmail = async (req, res) => {
+  const { email, password } = req.query;
+
+  try {
+    const user = await User.findOne({email}).exec();
+
+    if (!user) {
+      return res.status(404).json({ message: 'Email not found' });
+    }
+
+    if (password !== user.password) {
+      return res.status(401).json({ message: 'Email or password incorrect' });
+    }
+
+    // Proceed with next code if email and password match
+    // Your code here...
+
+    return res.status(200).json({ message: 'Login successful' });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
 
 module.exports = {
   createUser,

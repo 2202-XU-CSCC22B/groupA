@@ -1,17 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-const Router = require("./routes");
-
+const userRoutes = require('./routes/userRoute');
+const cors = require('cors')
 const PORT = 3000;
 
 // Connect to MongoDB
-const url = 'mongodb+srv://SLP_Property_Pass:ExitPass123@cluster0.xas87bl.mongodb.net/';
-const client = new MongoClient(mongoURI, { useUnifiedTopology: true });
+const url = 'mongodb+srv://SLP_Property_Pass:ExitPass123@Cluster0.xas87bl.mongodb.net/signup_login';
+
 
 // Connection to the MongoDB database
 mongoose.connect(
-  `mongodb+srv://${user}:${pass}@${cluster}.xas87bl.mongodb.net/${name}?retryWrites=true&w=majority`,
+  `${url}`,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -24,19 +24,11 @@ db.once("open", function () {
   console.log("Connected successfully");
 });
 
+app.use(cors());
 app.use(express.json());
-app.use(Router);
+app.use('/api', userRoutes);
 
-// for Mac
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
 
 app.listen(PORT, () => {
   console.log(`Server is running at port ${PORT}`);
-});
-
-// Define routes
-app.get('/', (req, res) => {
-  res.send('Hello, world!');
 });
