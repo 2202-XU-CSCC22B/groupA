@@ -65,7 +65,7 @@
             </div>
 
             <div class="signup-form">
-              <div class="title">Register</div>
+              <div class="title">Signup</div>
                 
               <form action="#">
                 <div class="input-boxes">
@@ -121,6 +121,7 @@ export default {
       email: '',
       password: '',
       errorMsg: '',
+      signup_verify: '',
     };
   },
   methods: {
@@ -157,8 +158,15 @@ export default {
         alert(data.message);
         console.log(data.message);
         return false;
-
       } else if (response.status === 404) {
+        alert(data.message);
+        console.log(data.message);
+        return false;
+      } else if (response.status === 422) {
+        alert(data.message);
+        console.log(data.message);
+        return false;
+      } else if (response.status === 403) {
         alert(data.message);
         console.log(data.message);
         return false;
@@ -169,7 +177,51 @@ export default {
       console.error(error);
       return false;
     }
-  }
+  },
+
+  async handleSignup() {
+    const signupResult = await this.signup();
+
+    if (signupResult) {
+      // Proceed with the redirection
+      this.signup_verify = "Verify Email then Login";
+    } else {
+      // Display an error message or handle the failed login scenario
+      console.log('Signup failed. Please try again.');
+    }
+  },
+
+  async signup() {
+    try {
+      const response = await api.post('api/signup', {
+        params: {
+          username: this.username,
+          email: this.email,
+          password: this.password
+        }
+      });
+
+      const { data } = response;
+
+      if (response.status === 201) {
+        console.log(data.message);
+        return true;
+      } else if (response.status === 400) {
+        alert(data.message);
+        console.log(data.message);
+        return false;
+      } else if (response.status === 422) {
+        alert(data.message);
+        console.log(data.message);
+        return false;
+      }
+      
+    } catch (error) {
+      this.errorMsg = "Invalid username or password.";
+      console.error(error);
+      return false;
+    }
+  },
 }
 };
 </script>
@@ -187,8 +239,8 @@ export default {
 }
 
 body{
-  width: 90%;
-  height: 90%;
+  /* width: 100%;
+  height: 100%; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -202,8 +254,8 @@ body{
   left: 50%;
   transform: translate(-50%, -50%);
   
-  max-width: 850px;
-  max-height: 700px;
+  /* max-width: 900px; */
+  max-height: 750px;
   width: 100%;
   background: #fff;
   padding: 40px 30px;

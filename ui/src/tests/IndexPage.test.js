@@ -1,5 +1,5 @@
 // Import the component
-import IndexPage from '@/components/IndexPage.vue';
+import IndexPage from '../pages/IndexPage.vue';
 import axios from 'axios';
 
 jest.mock('axios');
