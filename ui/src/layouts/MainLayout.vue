@@ -1,6 +1,6 @@
 <template>
 <div class="image-container"></div>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh Lpr lFf" class = rounded-layout>
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -10,6 +10,7 @@
           icon="menu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
+          class = "q-header"
         />
 
         <q-toolbar-title>
@@ -40,11 +41,12 @@
         />
       </q-list>
     </q-drawer>
-
     <q-page-container>
       <router-view />
     </q-page-container>
   </q-layout>
+
+ 
 </template>
 
 <script>
@@ -56,14 +58,7 @@ const linksList = [
     title: 'Home',
     caption: '',
     icon: 'home',
-    to : '/',
-  },
-
-  {
-    title: 'Profile',
-    caption: 'My Profile',
-    icon:  "account_circle",
-    to : '/profile',
+    to : '/home',
   },
   {
     title: 'Form',
@@ -77,12 +72,6 @@ const linksList = [
     caption: 'Check my progress',
     icon: 'show_chart',
     to : '/track',
-  },
-  {
-    title: 'Verify',
-    caption: 'Validate my form',
-    icon:  'check',
-    to : '/verify',
   },
   {
     title: 'Log out',
@@ -126,9 +115,15 @@ export default defineComponent({
     background-position: center;
   }
 
-.q-header {
+  .q-header {
     background-color: #283971;
   }
+
+  .rounded-layout {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
 </style>
 
 

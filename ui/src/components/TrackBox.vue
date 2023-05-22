@@ -3,7 +3,7 @@
     <q-stepper
       v-model="step"
       vertical
-      color="primary"
+      color=""
       animated
     >
       <q-step
@@ -70,13 +70,6 @@
         :done="step > 5"
       >
       </q-step>
-
-      
-      
-
-
-
-
     </q-stepper>
   </div>
 </template>

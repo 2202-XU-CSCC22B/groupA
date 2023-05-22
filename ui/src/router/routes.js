@@ -1,10 +1,11 @@
 
 const routes = [
   {path: '/', component: () => import('pages/IndexPage.vue')},
-  //{path : '/profile', component : () => import ('components/Profile.vue')},
+  {path : '/home', component : () => import ('layouts/MainLayout.vue')},
   {path: '/track', component: () => import('components/TrackBox.vue')},
   {path: '/dashboard', component: () => import('layouts/MainLayout.vue')},
   {path: '/form', component: () => import('components/FormPage.vue')},
+  {path: '/logout', component: () => import('pages/IndexPage.vue')},
 
   // Always leave this as last one,
   // but you can also remove it
