@@ -1,8 +1,8 @@
-const FormSubmission = require("../models/formModel");
+const formSubmission = require("../models/formModel");
 
 exports.createForm = async (req, res) => {
   try {
-    const form = new FormSubmission(req.body);
+    const form = new formSubmission(req.body);
     await form.save();
     res.status(201).send(form);
   } catch (error) {
