@@ -25,8 +25,9 @@ db.once("open", function () {
   console.log("Connected successfully");
 });
 
-app.use('/form', formRoutes);
+
 app.use(express.json());
+app.use('/form', formRoutes);
 app.use(Router);
 
 // for Mac
