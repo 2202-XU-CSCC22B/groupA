@@ -205,7 +205,7 @@ export default {
     },
 
     submittedSuccessfully(){
-      this.$router.push({ path: '/formSubmitted', component: () => import('pages/FormSubmit.vue.js') });
+      this.$router.push({ path: '/formSubmitted', component: () => import('pages/FormSubmit.vue') });
     },
 
     submitForm(){
