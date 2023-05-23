@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const formRoutes = require('./routes/formRoute');
 const app = express();
 const Router = require("./routes");
 
@@ -24,6 +25,7 @@ db.once("open", function () {
   console.log("Connected successfully");
 });
 
+app.use('/pass', passRoutes);
 app.use(express.json());
 app.use(Router);
 

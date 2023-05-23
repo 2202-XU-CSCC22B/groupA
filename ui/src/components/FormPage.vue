@@ -1,9 +1,21 @@
 <template>
+
+  <div class = "back-button">
+      <q-btn  flat dense icon="arrow_back" @click="backDashboard" color = "#283971"/>
+  </div>
+
   <div class="form-container">
+
     <div class = title>
       Property Pass Form
     </div>
-    
+    <div class = "part0">
+      <label class="form-label">Name:</label>
+      <input type="text" v-model="req.name" class="form-input" />
+
+      <label class="form-label">Specifications:</label>
+      <input type="text" v-model="nature.spec" class="form-input" />
+    </div>
     <div class="part1">
       <label class="form-label">Nature of Transaction:</label>
       <q-select
@@ -60,7 +72,7 @@
 
       <div v-if="selectedTransaction.includes('others')" class="transaction-details">
         <label class="form-label">Input your nature of transaction:</label>
-        <input type="text" v-model="others_description" placeholder="Enter description" class="form-input" />
+        <textarea v-model="others_description" placeholder="Enter description" class="form-input" />
       </div>
 
     </div>
@@ -114,7 +126,7 @@
 
 <script>
 import { QSelect } from "quasar";
-import axios from 'axios';
+import { api } from 'boot/axios-config.js';
 
 export default {
   name: "FormPage",
@@ -150,6 +162,9 @@ export default {
     };
   },
   methods: {
+    backDashboard(){
+      this.$router.push({ path: '/dashboard', component: () => import('layouts/MainLayout.vue') });
+    },
     handleFileChange(event) {
       const file = event.target.files[0];
       this.file = {
@@ -206,6 +221,8 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  width: 100%; 
+  overflow-y: auto;
 }
 
 .title{
@@ -239,6 +256,11 @@ export default {
   margin-bottom: 10px;
 }
 
+.textarea {
+  height: 100px; /* Set a fixed height for the textarea */
+  resize: none; /* Disable resizing */
+}
+
 .part2{
   width:100%;
   display: block;
@@ -262,6 +284,11 @@ export default {
   border-bottom: 1px solid #ccc;
 }
 
+.back-button {
+  margin-right: 10px;
+  margin-left: 0;
+}
+
 .remove-button {
   padding: 5px 10px;
   background-color: #e74c3c;
@@ -269,6 +296,9 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+.remove-button:hover {
+  background-color: #c0392b; /* Change to desired hover background color */
 }
 
 .add-button {
@@ -281,12 +311,21 @@ export default {
   cursor: pointer;
 }
 
+.add-button:hover {
+  background-color: #27ae60; /* Change to desired hover background color */
+}
+
 .submit-button {
   padding: 10px 20px;
-  background-color: #3498db;
+  background-color: #283971;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
+
+.submit-button:hover {
+  background-color: #1d2657; /* Change to desired hover background color */
+}
+
 </style>
