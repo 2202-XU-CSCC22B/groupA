@@ -54,7 +54,7 @@
   
   .back-button:hover,
   .track-button:hover {
-    background-color: #1d2657;
+    background-color: #4866C9;
   }
   
   </style>

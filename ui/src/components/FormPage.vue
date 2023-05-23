@@ -40,7 +40,7 @@
         <input type="text" v-model="sales_official_receipt" class="form-input" />
 
         <label class="form-label">XU Official Receipt:</label><br>
-        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
+        <q-file v-model="sales_receipt_file" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('transfer_loc')" class="transaction-details">
@@ -54,7 +54,7 @@
         <input type="text" v-model="transfer_form_number" class="form-input" />
 
         <label class="form-label">Accomplished Transfer Form w/ MR:</label><br>
-        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
+        <q-file v-model="transfer_form_file" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('repair_replacement')" class="transaction-details">
@@ -67,7 +67,7 @@
         <input type="text" v-model="repair_company" placeholder="Enter company" class="form-input" />
 
         <label class="form-label">Assessment from CISO or PPO:</label><br>
-        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
+        <q-file v-model="repair_assessment_file" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('borrowed')" class="transaction-details">
@@ -78,7 +78,7 @@
         <input type="date" v-model="borrowed_return_date" class="form-input" />
 
         <label class="form-label">Request to Borrow Form:</label><br>
-        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
+        <q-file v-model=" borrowed_request_file" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('others')" class="transaction-details">
@@ -88,7 +88,7 @@
 
       <div class = "user-remarks">
         <label class="form-label">Remarks:</label><br>
-        <textarea v-model="user_remarks" placeholder="Enter description" class="form-input" />
+        <textarea v-model="user_remarks" placeholder="Enter remarks" class="form-input" />
       </div>
 
     </div>
@@ -142,6 +142,7 @@
 
 <script>
 import { QSelect } from "quasar";
+import { api } from 'boot/axios-config.js';
 
 
 export default {
@@ -151,19 +152,29 @@ export default {
   },
   data() {
     return {
-      name:"",
-      curr_date:"",
+
+      name: "",
+      curr_date: "",
       selectedTransaction: "",
+
       sales_official_receipt: "",
+      sales_receipt_file: null,
+
       transfer_from: "",
       transfer_to: "",
       transfer_form_number: "",
-      repair_warranty: null,
+      transfer_form_file: null,
+
       repair_company: "",
+      repair_assessment_file: null,
+
       borrowed_location: "",
       borrowed_return_date: "",
+      borrowed_request_file: null,
+
       others_description: "",
-      user_remarks:"",
+
+      user_remarks: "",
       number_of_items: 0,
       item_fields: [],
     
@@ -175,8 +186,8 @@ export default {
         { label: "Others", value: "others" }
       ],
       repair_or_replacement: [
-        { label: "With Warranty", value: "w_warranty" },
-        { label: "Without Warranty", value: "wo_warranty" }
+        { label: "With Warranty", value: true },
+        { label: "Without Warranty", value: false }
       ]
     };
   },
@@ -184,14 +195,7 @@ export default {
     backDashboard(){
       this.$router.push({ path: '/dashboard', component: () => import('layouts/MainLayout.vue') });
     },
-    handleFileChange(event) {
-      const file = event.target.files[0];
-      this.file = {
-        filename: file.name,
-        mimetype: file.type,
-        data: file.data // Assuming you have access to the file data in this form
-      };
-    },
+
     addItem() {
       this.item_fields.push({
         particulars: "",
@@ -207,9 +211,49 @@ export default {
     submittedSuccessfully(){
       this.$router.push({ path: '/formSubmitted', component: () => import('pages/FormSubmit.vue') });
     },
+    submitDatabase(){
+      const formData = {
+      name: this.name,
+      curr_date: this.curr_date,
+      selectedTransaction: this.selectedTransaction,
+      sales_official_receipt: this.sales_official_receipt,
+      sales_receipt_file: this.sales_receipt_file,
+      transfer_from: this.transfer_from,
+      transfer_to: this.transfer_to,
+      transfer_form_number: this.transfer_form_number,
+      transfer_form_file: this.transfer_form_file,
+      repair_company: this.repair_company,
+      repair_assessment_file: this.repair_assessment_file,
+      borrowed_location: this.borrowed_location,
+      borrowed_return_date: this.borrowed_return_date,
+      borrowed_request_file: this.borrowed_request_file,
+      others_description: this.others_description,
+      user_remarks: this.user_remarks,
+      item_fields: this.item_fields
+    };
 
+    // Validate the form against the schema
+    const { error } = formSchema.validate(formData);
+    if (error) {
+      console.error("Form validation error:", error);
+      // Perform error handling or show an error message to the user
+      return;
+    }
+
+    api.post("/form", formData)
+      .then(response => {
+        console.log("Form submitted successfully!");
+        // Reset the form fields or navigate to a success page
+      })
+      .catch(error => {
+        console.error("Form submission error:", error);
+        // Show an error message or perform error handling
+      });
+    },
+    
     submitForm(){
       this.submittedSuccessfully();
+      this.submitDatabase();
     }
   
   }
@@ -341,7 +385,7 @@ export default {
 }
 
 .submit-button:hover {
-  background-color: #1d2657; /* Change to desired hover background color */
+  background-color: #4866C9;; /* Change to desired hover background color */
 }
 
 </style>
