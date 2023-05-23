@@ -26,5 +26,4 @@ const formSchema = new mongoose.Schema({
 
 
 const formSubmission = mongoose.model("form", formSchema);
-module.exports = PassForm;
 module.exports = formSubmission;
