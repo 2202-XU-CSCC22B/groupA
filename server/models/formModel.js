@@ -146,5 +146,5 @@ formSchema.path('selectedTransaction').validate(function(value) {
 }, 'Selected Transaction is not valid for the chosen Nature.');
 
 
-const formSubmission = mongoose.model("form", formSchema);
-module.exports = formSubmission;
+const FormSubmission = mongoose.model("Form", formSchema);
+module.exports = FormSubmission;

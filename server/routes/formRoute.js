@@ -3,7 +3,7 @@ const formController = require('../controllers/formController');
 
 const router = express.Router();
 
-// Create a new pass
+// Create a new form
 router.post("/", formController.createForm);
 
 module.exports = router;
