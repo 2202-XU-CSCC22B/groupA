@@ -1,78 +1,94 @@
 <template>
-
   <div class = "back-button">
       <q-btn  flat dense icon="arrow_back" @click="backDashboard" color = "#283971"/>
   </div>
 
   <div class="form-container">
 
-    <div class = title>
+    <div class = "title">
       Property Pass Form
     </div>
-    <div class = "part0">
-      <label class="form-label">Name:</label>
-      <input type="text" v-model="req.name" class="form-input" />
 
-      <label class="form-label">Specifications:</label>
-      <input type="text" v-model="nature.spec" class="form-input" />
+    <div class="part0">
+
+      <div class="input-wrapper">
+        <label class="form-label">Name:</label>
+        <input type="text" v-model="name" class="form-input" />
+      </div>
+
+      <div class="input-wrapper">
+        <label class="form-label">Date:</label>
+        <input type="date" v-model="curr_date" class="form-input" />
+      </div>
     </div>
+
     <div class="part1">
-      <label class="form-label">Nature of Transaction:</label>
-      <q-select
-        v-model="selectedTransaction"
-        :options="nature"
-        emit-value
-        map-options
-        class="form-select"
-      />
+
+      <div class="transaction-container">
+        <label class="form-label">Nature of Transaction:</label>
+        <q-select
+          v-model="selectedTransaction"
+          :options="nature"
+          emit-value
+          map-options
+          class="form-select"
+        />
+      </div>
 
       <div v-if="selectedTransaction.includes('sales')" class="transaction-details">
-        <label class="form-label">Official Receipt No:</label>
+        <label class="form-label">Official Receipt No:</label><br>
         <input type="text" v-model="sales_official_receipt" class="form-input" />
 
-        <label class="form-label">XU Official Receipt:</label>
+        <label class="form-label">XU Official Receipt:</label><br>
         <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('transfer_loc')" class="transaction-details">
-        <label class="form-label">From:</label>
+        <label class="form-label">From:</label><br>
         <input type="text" v-model="transfer_from" class="form-input" />
 
-        <label class="form-label">To:</label>
+        <label class="form-label">To:</label><br>
         <input type="text" v-model="transfer_to" class="form-input" />
 
-        <label class="form-label">Transfer Form No:</label>
+        <label class="form-label">Transfer Form No:</label><br>
         <input type="text" v-model="transfer_form_number" class="form-input" />
 
-        <label class="form-label">Accomplished Transfer Form w/ MR:</label>
+        <label class="form-label">Accomplished Transfer Form w/ MR:</label><br>
         <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('repair_replacement')" class="transaction-details">
-        <label class="form-label">Warranty availability:</label>
-        <q-select v-model="repair_warranty" :options="repair_or_replacement" class="form-select" />
-
-        <label class="form-label">Company:</label>
+        <div class="transaction-container">
+          <label class="form-label">Warranty availability:</label>
+          <q-select v-model="repair_warranty" :options="repair_or_replacement" class="form-select" />
+        </div>
+        <br>
+        <label class="form-label">Company:</label><br>
         <input type="text" v-model="repair_company" placeholder="Enter company" class="form-input" />
 
-        <label class="form-label">Assessment from CISO or PPO:</label>
+        <label class="form-label">Assessment from CISO or PPO:</label><br>
         <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('borrowed')" class="transaction-details">
-        <label class="form-label">Location:</label>
+        <label class="form-label">Location:</label><br>
         <input type="text" v-model="borrowed_location" placeholder="Enter full address" class="form-input" />
 
-        <label class="form-label">Date item returned:</label>
+        <label class="form-label">Date item returned:</label><br>
         <input type="date" v-model="borrowed_return_date" class="form-input" />
 
-        <label class="form-label">Request to Borrow Form:</label>
+        <label class="form-label">Request to Borrow Form:</label><br>
         <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('others')" class="transaction-details">
-        <label class="form-label">Input your nature of transaction:</label>
+        <label class="form-label">Input your nature of transaction:</label><br>
         <textarea v-model="others_description" placeholder="Enter description" class="form-input" />
+      </div>
+
+      <div class = "user-remarks">
+        <label class="form-label">Remarks:</label><br>
+        <textarea v-model="user_remarks" placeholder="Enter description" class="form-input" />
       </div>
 
     </div>
@@ -119,14 +135,14 @@
     </div>
 
     <div class="submit">
-      <button type="submit" @click="saveData" class="submit-button">Submit</button>
+      <button type="submit" @click="submittedSuccessfully" class="submit-button">Submit</button>
     </div>
   </div>
 </template>
 
 <script>
 import { QSelect } from "quasar";
-import { api } from 'boot/axios-config.js';
+
 
 export default {
   name: "FormPage",
@@ -135,6 +151,8 @@ export default {
   },
   data() {
     return {
+      name:"",
+      curr_date:"",
       selectedTransaction: "",
       sales_official_receipt: "",
       transfer_from: "",
@@ -145,6 +163,7 @@ export default {
       borrowed_location: "",
       borrowed_return_date: "",
       others_description: "",
+      user_remarks:"",
       number_of_items: 0,
       item_fields: [],
     
@@ -184,34 +203,15 @@ export default {
     removeItem(index) {
       this.item_fields.splice(index, 1);
     },
-    saveData(){
-      const formData = {
-        selectedTransaction: this.selectedTransaction,
-        sales_official_receipt: this.sales_official_receipt,
-        transfer_from: this.transfer_from,
-        transfer_to: this.transfer_to,
-        transfer_form_number: this.transfer_form_number,
-        repair_warranty: this.repair_warranty,
-        repair_company: this.repair_company,
-        borrowed_location: this.borrowed_location,
-        borrowed_return_date: this.borrowed_return_date,
-        others_description: this.others_description,
-        file: this.file,
-        item_fields: this.item_fields
-      };
 
-      axios.post("/api/submit", formData)
-        .then((response) => {
-          // Handle successful form submission
-          console.log(response.data);
-          // Optionally, you can navigate to the CheckForm page here
-          // Example: this.$router.push('/check-form');
-        })
-        .catch((error) => {
-          // Handle form submission error
-          console.error(error);
-        });
+    submittedSuccessfully(){
+      this.$router.push({ path: '/formSubmitted', component: () => import('pages/FormSubmit.vue.js') });
+    },
+
+    submitForm(){
+      this.submittedSuccessfully();
     }
+  
   }
 };
 </script>
@@ -225,11 +225,27 @@ export default {
   overflow-y: auto;
 }
 
+.part0 {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-wrapper {
+  width: 48%; /* Adjust the width as needed */
+}
+
 .title{
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
 }
+
+.transaction-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .form-label {
   font-weight: bold;
   margin-bottom: 5px;

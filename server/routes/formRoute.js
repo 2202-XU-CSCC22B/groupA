@@ -4,6 +4,6 @@ const formController = require('../controllers/formController');
 const router = express.Router();
 
 // Create a new pass
-router.post("/", passController.createPass);
+router.post("/", formController.createForm);
 
 module.exports = router;
