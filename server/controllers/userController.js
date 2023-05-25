@@ -1,137 +1,117 @@
 const { default: mongoose } = require("mongoose");
 const User = require("../models/userModel");
+const bcrypt = require('bcryptjs');
+const generateLogToken = require("../utils");
+// const verifmail = require("../utils");
+const Token = require("../models/token");
+const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransport({
-  service: "Gmail",
-  auth: {
-    user: process.env.EMAIL_USERNAME,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
 
+// Create User Account
 const signup = async (request, response) => {
-  // const { username, email, password } = request.body;
-  const {email} = request.body;
   
-  // Check if email is present
-  if (!email) {
-    return response.status(422).send({ message: "Missing email." });
-  }
+  // If email already exists
+  let user = await User.findOne({ email : request.body.email });
+  if (user) {
+    return response.send("User with given email already exists!");
+  };
 
   try {
+    // Create and save new user
+    user = new User({
+      username: request.body.username,
+      email: request.body.email,
+      password: await bcrypt.hash(request.body.password, 10),
+    });
+    await user.save;
 
-    // Check if email is already in use
-    const existingUser = await User.findOne({ $or: [{ username }, { email }] }).exec();
-    // const existingUser = await User.findOne({ email }).exec();
+    // Generate Verification Token
+    const token = new Token(
+      { userId: user._id,
+        token: crypto.randomBytes(16).toString('hex') 
+      }
+    );
+    await token.save();
+    console.log(token);
 
-    if (existingUser) {
-      return response.status(400).send({ message: 'Username or email already exists' });
+    // Send mail
+    const link = `http://localhost:3000/api/users/confim/${token.token}`;
+
+    // CHANGE PARAMETER OF user.email
+    const verify = await verifmail(user.email, link);
+    if(verify) {
+      response.status(200).send({
+      message: "Email sent! Check your mail"
+    });
+    } else {
+      message: "Email not sent"
     }
+    
 
-    // 1. Create and save new user
-    const user = await new User({ 
-      _id: new mongoose.Types.ObjectId,
-      username: username, 
-      email: email, 
-      password:password 
-      // _id: new mongoose.Types.ObjectId,
-      // email: email,
-    }).save();
-
-    // 2. Generate a verification token with the user's ID
-    const verificationToken = user.generateVerificationToken();
-
-    // 3. Email the user a unique verification link
-    const url = `http://localhost:3000/api/verify/${verificationToken}`
-      transporter.sendMail({
-        to: email,
-        subject: '[PROPERTY PASS] Verify Account',
-        html: `Click <a href = '${url}'>here</a> to confirm your email.`
-      })
-
-    return response.status(201).send({ message: `Sent a verification email to ${email}` });
   } catch (error) {
       console.error(error);
       return response.status(500).send({ error: 'Server error' });
-  }
+    };
 };
 
-const login = async (req, res) => {
-  const { email, password } = req.query;
-  // const { email } = req.body
-
-  // Check if we have an email
-  if (!email) {
-    return res.status(422).send({ message: "Missing email." });
-  }
+const login = async(request, response) => {
 
   try {
-    const user = await User.findOne({email}).exec();
+    const user = await User.findOne({ email : request.body.email });
 
-    // 1. Verify if email exists
-    if (!user) {
-      return res.status(404).send({ message: "Email does not exist" });
+    if (user) {
+      if (bcrypt.compare(request.body.password, user.password)) {
+        response.send(
+          {
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            password: user.password,
+            token: generateLogToken(user),
+          }
+        )
+      }
     }
-
-    // 2. Ensure that the account has been verified
-    if (!user.verified) {
-      return res.status(403).send({ message: "Verify your account first" });
-    }
-
-    if (password !== user.password) {
-      return res.status(401).send({ message: 'Password is incorrect' });
-    }
-
-    // Proceed with next code if email and password match
-    return res.status(200).send({ message: 'Login successful' });
-
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ error: 'Server error' });
-  }
+    return response.status(500).send({ error: 'Server error' });
+  };
+  
 };
 
-const verify = async(req, res) => {
-  const {token} = req.params
-
-  // Check if we have an id
-  if (!token) {
-    return res.status(422).send({ message: "Missing Token" })
-  };
-
-  // 1. Verify the token from the URL
-  let payload = null
+const verifmail = async(email, link) => {
   try {
-    payload = jwt.verify(
-      token,
-      process.env.USER_VERIFICATION_TOKEN_SECRET
-    );
+      let transporter = nodemailer.createTransport({
+          service: "Gmail",
+          auth: {
+              user: process.env.USER_EMAIL,
+              pass: process.env.PASSWORD,
+          },
+      });
+
+      // Send email
+      let info = await transporter.sendMail({
+          from: process.env.USER, //sender
+          to: email, //receiver
+          subject: "[Account Verification] Property Pass",
+          text: "Welcome",
+          html: `
+          <div>
+              <a href=${link}>Click here to activate your account</a>
+          </div>
+          `// mail body
+      });
+      console.log("Mail sent successfully!")
   } catch (error) {
-    return res.status(500).send(error);
+      console.log(error, "Mail failed to send")
   }
-
-  try{
-    // 2. Find user with matching ID
-    const user = await User.findOne({ _id: payload.ID }).exec();
-    if (!user) {
-      return res.status(404).send({ message: "User does not exist" });
-    }
-
-    // 3. Update user verification status to true
-    user.verified = true;
-    await user.save();
-
-    return res.status(200).send({ message: "Account Verified" });
-  } catch (error) {
-    return res.status(500).send(error);
-  }
-}
+};
 
 
 
 module.exports = {
   signup,
   login,
-  verify,
+  // verify,
 };

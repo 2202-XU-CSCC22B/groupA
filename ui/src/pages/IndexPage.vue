@@ -72,17 +72,17 @@
                   
                   <div class="input-box">
                     <i class="fas fa-user"></i>
-                    <input type="text" placeholder="Enter your name" required>
+                    <input type="text" name="username"  placeholder="Enter your name" required>
                   </div>
 
                   <div class="input-box">
                     <i class="fas fa-envelope"></i>
-                    <input type="text" placeholder="Enter your email" required>
+                    <input type="email" name="email" placeholder="Enter your email" required>
                   </div>
 
                   <div class="input-box">
                     <i class="fas fa-lock"></i>
-                    <input type="password" placeholder="Enter your password" required>
+                    <input type="password" name="password" placeholder="Enter your password" required>
                   </div>
 
                   
@@ -262,6 +262,7 @@ body{
   box-shadow: 0 5px 10px rgba(0,0,0,0.2);
   perspective: 2700px;
   border-radius: 10px;
+  display: flexbox;
 }
 
 .cover{

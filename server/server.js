@@ -1,9 +1,12 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const app = express();
 const userRoutes = require('./routes/userRoute');
-const cors = require('cors')
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const path = require('path');
+
+const app = express();
 const PORT = 3000;
 
 // Connect to MongoDB
@@ -16,8 +19,6 @@ mongoose.connect(
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    // useCreateIndex: true,
-    // useFindAndModify: false,
   }
 );
 
@@ -27,9 +28,17 @@ db.once("open", function () {
   console.log("Connected successfully");
 });
 
+
+// application.x-www-form-urlencoded
+app.use(express.urlencoded({ extended: false }));
 app.use(cors());
+// application/json response
 app.use(express.json());
 app.use('/api', userRoutes);
+// middleware for cookies
+app.use(cookieParser());
+//static files
+app.use('/static', express.static(path.join(__dirname, 'public')));
 
 
 app.listen(PORT, () => {
