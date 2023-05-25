@@ -3,8 +3,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoute');
 const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const path = require('path');
 
 const app = express();
 const PORT = 3000;
@@ -29,16 +27,9 @@ db.once("open", function () {
 });
 
 
-// application.x-www-form-urlencoded
-app.use(express.urlencoded({ extended: false }));
 app.use(cors());
-// application/json response
 app.use(express.json());
 app.use('/api', userRoutes);
-// middleware for cookies
-app.use(cookieParser());
-//static files
-app.use('/static', express.static(path.join(__dirname, 'public')));
 
 
 app.listen(PORT, () => {

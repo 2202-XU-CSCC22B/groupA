@@ -2,10 +2,10 @@ const { default: mongoose } = require("mongoose");
 const User = require("../models/userModel");
 const bcrypt = require('bcryptjs');
 const generateLogToken = require("../utils");
-// const verifmail = require("../utils");
 const Token = require("../models/token");
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const { response, request } = require("express");
 
 
 // Create User Account
@@ -36,16 +36,15 @@ const signup = async (request, response) => {
     console.log(token);
 
     // Send mail
-    const link = `http://localhost:3000/api/users/confim/${token.token}`;
+    const link = `http://localhost:3000/api/users/confirm/${token.token}`;
 
-    // CHANGE PARAMETER OF user.email
     const verify = await verifmail(user.email, link);
     if(verify) {
       response.status(200).send({
       message: "Email sent! Check your mail"
     });
     } else {
-      message: "Email not sent"
+      "Email not sent"
     }
     
 
@@ -55,12 +54,27 @@ const signup = async (request, response) => {
     };
 };
 
-const login = async(request, response) => {
+// Activate Account
+const confirm = async(request, response) => {
+  try{
+    const token = await Token.findOne({
+      token: request.params.token,
+    });
+    console.log(token);
+    await User.updateOne({_id: token.userId}, {$set: {verified: true}});
+    await Token.findByIdAndRemove(token._id);
+    response.send("Email verified");
+  } catch(error) {
+    response.status(400).send("An error occurred");
+  }
+};
 
+// Login User Account
+const login = async(request, response) => {
   try {
     const user = await User.findOne({ email : request.body.email });
 
-    if (user) {
+    if (user && user.verified) {
       if (bcrypt.compare(request.body.password, user.password)) {
         response.send(
           {
@@ -73,6 +87,9 @@ const login = async(request, response) => {
         )
       }
     }
+
+    response.send("You have to verify your account first");
+
   } catch (error) {
     console.error(error);
     return response.status(500).send({ error: 'Server error' });
@@ -80,6 +97,7 @@ const login = async(request, response) => {
   
 };
 
+// Send Email
 const verifmail = async(email, link) => {
   try {
       let transporter = nodemailer.createTransport({
@@ -102,16 +120,18 @@ const verifmail = async(email, link) => {
           </div>
           `// mail body
       });
-      console.log("Mail sent successfully!")
+
+      console.log("Mail sent successfully!");
+      return info;
+
   } catch (error) {
-      console.log(error, "Mail failed to send")
+      console.log(error, "Mail failed to send");
+      return null;
   }
 };
-
-
 
 module.exports = {
   signup,
   login,
-  // verify,
+  confirm,
 };

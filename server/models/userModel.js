@@ -31,19 +31,6 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// userSchema.methods.generateVerificationToken = function() {
-//   const user = this;
-
-//   const verificationToken = jwt.sign(
-//     { ID: user._id },
-//     process.env.USER_VERIFICATION_TOKEN_SECRET,
-//     { expiresIn: "7d" },
-//   );
-
-//   return verificationToken;
-
-// };
-
 // Create the User model
 const User = mongoose.model('User', userSchema);
 // Export the User model
