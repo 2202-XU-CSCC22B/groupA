@@ -5,6 +5,8 @@ const api = axios.create({
   baseURL: 'http://localhost:3000/' // Replace with your Node server URL
 });
 
+api.defaults.headers.post['Content-Type'] = 'application/json';
+
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 

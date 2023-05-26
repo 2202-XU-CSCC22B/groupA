@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoute');
 const cors = require('cors');
+// const bodyParser = require('body-parser');
 
 const app = express();
 const PORT = 3000;
@@ -30,6 +31,7 @@ db.once("open", function () {
 app.use(cors());
 app.use(express.json());
 app.use('/api', userRoutes);
+// app.use(bodyParser.json());
 
 
 app.listen(PORT, () => {

@@ -1,30 +1,32 @@
 const { default: mongoose } = require("mongoose");
 const User = require("../models/userModel");
 const bcrypt = require('bcryptjs');
-const generateLogToken = require("../utils");
+const { generateLogToken } = require("../utils");
 const Token = require("../models/token");
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-const { response, request } = require("express");
+const { url } = require("inspector");
 
 
 // Create User Account
 const signup = async (request, response) => {
   
   // If email already exists
+  console.log("Email:", request.body.email);
+  console.log("Password:", request.body.password);
   let user = await User.findOne({ email : request.body.email });
   if (user) {
-    return response.send("User with given email already exists!");
-  };
+    return response.send("Username or Email already exists!");
+  }
 
   try {
     // Create and save new user
     user = new User({
-      username: request.body.username,
-      email: request.body.email,
-      password: await bcrypt.hash(request.body.password, 10),
+      username: request.body.params.username,
+      email: request.body.params.email,
+      password: await bcrypt.hash(request.body.params.password, 10),
     });
-    await user.save;
+    await user.save();
 
     // Generate Verification Token
     const token = new Token(
@@ -36,7 +38,8 @@ const signup = async (request, response) => {
     console.log(token);
 
     // Send mail
-    const link = `http://localhost:3000/api/users/confirm/${token.token}`;
+    const link = `http://localhost:3000/api/confirm/${token.token}`;
+    // const link = `http://localhost:8080/`;
 
     const verify = await verifmail(user.email, link);
     if(verify) {
@@ -60,10 +63,14 @@ const confirm = async(request, response) => {
     const token = await Token.findOne({
       token: request.params.token,
     });
+
     console.log(token);
     await User.updateOne({_id: token.userId}, {$set: {verified: true}});
     await Token.findByIdAndRemove(token._id);
     response.send("Email verified");
+
+    // response.redirect('http://localhost:8080')
+
   } catch(error) {
     response.status(400).send("An error occurred");
   }
@@ -72,29 +79,49 @@ const confirm = async(request, response) => {
 // Login User Account
 const login = async(request, response) => {
   try {
-    const user = await User.findOne({ email : request.body.email });
 
-    if (user && user.verified) {
-      if (bcrypt.compare(request.body.password, user.password)) {
-        response.send(
-          {
+    const { email, password } = request.query;
+    // Validate input
+    if (!email || !password) {
+      return response.status(400).send("Email and password are required");
+    }
+
+    const user = await User.findOne({ email });
+
+    // User does not exist
+    if (!user) {
+      return response.status(400).send("Invalid email or password");
+    }
+
+    // Check if user is verified
+    if (!user.verified) {
+      return response.status(400).send("You have to verify your account first");
+    }
+
+    // Check password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return response.status(400).send("Invalid password");
+    }
+
+
+        const responseBody = {
             _id: user._id,
             username: user.username,
             email: user.email,
             password: user.password,
             token: generateLogToken(user),
           }
-        )
-      }
-    }
 
-    response.send("You have to verify your account first");
+
+    response.send(responseBody);
+    console.log(request.body);
+    // response.send("You have to verify your account first");
 
   } catch (error) {
     console.error(error);
     return response.status(500).send({ error: 'Server error' });
   };
-  
 };
 
 // Send Email
@@ -129,6 +156,11 @@ const verifmail = async(email, link) => {
       return null;
   }
 };
+
+// Reset Password
+// const resetPass = async(request, response) => {
+
+// }
 
 module.exports = {
   signup,
