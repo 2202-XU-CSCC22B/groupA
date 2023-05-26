@@ -6,7 +6,7 @@
   <body>
     <div class="container">
       <input type="checkbox" id="flip">
-      
+
       <div class="cover">
 
         <div class="front">
@@ -32,7 +32,7 @@
             <div class="form-content">
               <div class="login-form">
                   <div class="title">Login</div>
-                
+
                   <form action="#">
 
                     <div class="input-boxes">
@@ -64,10 +64,10 @@
 
             <div class="signup-form">
               <div class="title">Signup</div>
-                
+
               <form action="#">
                 <div class="input-boxes">
-                  
+
                   <div class="input-box">
                     <i class="fas fa-user"></i>
                     <input type="text" placeholder="Enter your name" required>
@@ -83,11 +83,11 @@
                     <input type="password" placeholder="Enter your password" required>
                   </div>
 
-                  
+
                   <div class="button input-box">
                     <input type="submit" value="Submit">
                   </div>
-                
+
 
                   <div class="text sign-up-text">Already have an account? <label for="flip">Login now</label></div>
 
@@ -151,7 +151,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
 
@@ -176,7 +176,7 @@ body{
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  
+
   max-width: 850px;
   max-height: 700px;
   width: 100%;

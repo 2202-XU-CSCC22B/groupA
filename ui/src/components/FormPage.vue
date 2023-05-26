@@ -3,7 +3,7 @@
     <div class = title>
       Property Pass Form
     </div>
-    
+
     <div class="part1">
       <label class="form-label">Nature of Transaction:</label>
       <q-select
@@ -101,7 +101,7 @@
         </tbody>
       </table>
 
-      
+
       </div>
       <button @click="addItem" class="add-button">Add Item</button>
     </div>
@@ -214,7 +214,7 @@ export default {
 
 .table-container{
   max-height: 300px;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
 .item-table {
   width: 100%;
@@ -256,4 +256,6 @@ export default {
   border-radius: 4px;
   cursor: pointer;
 }
+
+
 </style>
