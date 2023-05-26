@@ -45,10 +45,6 @@
                       <i class="fas fa-lock"></i>
                       <input v-model="password" type="password" placeholder="Enter your password" required>
                     </div>
-
-                    <div class="text">
-                      <router-link to="/forgotpassword">Forgot password?</router-link>
-                    </div>
                     
                     <p v-if="errorMsg" style="color: red; font-weight: 500;">{{ errorMsg }}</p>
 
