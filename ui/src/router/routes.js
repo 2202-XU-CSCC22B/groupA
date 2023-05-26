@@ -4,6 +4,7 @@ const routes = [
   {path: '/dashboard', component: () => import('layouts/MainLayout.vue')},
   {path: '/form', component: () => import('components/FormPage.vue')},
   {path: '/logout', component: () => import('pages/IndexPage.vue')},
+  {path: '/formSubmitted', component: () => import('pages/FormSubmit.vue')},
 
 
   // Always leave this as last one,
