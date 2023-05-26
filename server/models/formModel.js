@@ -21,14 +21,16 @@ const formSchema = new mongoose.Schema({
     type: String,
     required:function() {
       return this.selectedTransaction === 'sales';
-    }
+    },
+    sparse: true
   },
 
   sales_receipt_file: {
     type: Buffer,
     required:function() {
       return this.selectedTransaction === 'sales';
-    }
+    },
+    sparse: true
   },
 
   //transfer location
@@ -36,28 +38,32 @@ const formSchema = new mongoose.Schema({
     type: String,
     required:function() {
       return this.selectedTransaction === 'transfer_loc';
-    }
+    },
+    sparse: true
   },
 
   transfer_to: {
     type: String,
     required:function() {
       return this.selectedTransaction === 'transfer_loc';
-    }
+    },
+    sparse: true
   },
 
   transfer_form_number: {
     type: String,
     required:function() {
       return this.selectedTransaction === 'transfer_loc';
-    }
+    },
+    sparse: true
   },
   
   transfer_form_file: {
     type: Buffer,
     required:function() {
       return this.selectedTransaction === 'transfer_loc';
-    }
+    },
+    sparse: true
   },
 
   //repair or replacement
@@ -65,14 +71,24 @@ const formSchema = new mongoose.Schema({
     type: String,
     required:function() {
       return this.selectedTransaction === 'repair_replacement';
-    }
+    },
+    sparse: true
+  },
+
+  repair_warranty: {
+    type: Boolean,
+    required:function() {
+      return this.selectedTransaction === 'repair_replacement';
+    },
+    sparse: true
   },
 
   repair_assessment_file: {
     type: Buffer,
     required:function() {
       return this.selectedTransaction === 'repair_replacement';
-    }
+    },
+    sparse: true
   },
 
   //borrowed
@@ -80,21 +96,24 @@ const formSchema = new mongoose.Schema({
     type: String,
     required:function() {
       return this.selectedTransaction === 'borrowed';
-    }
+    },
+    sparse: true
   },
 
   borrowed_return_date:{
     type: Date,
     required:function() {
       return this.selectedTransaction === 'borrowed';
-    }
+    },
+    sparse: true
   },
 
   borrowed_request_file: {
     type: Buffer,
     required:function() {
       return this.selectedTransaction === 'borrowed';
-    }
+    },
+    sparse: true
   },
 
   //others
@@ -102,14 +121,13 @@ const formSchema = new mongoose.Schema({
     type: String,
     required:function() {
       return this.selectedTransaction === 'others';
-    }
+    },
+    sparse: true
   },
 
   others_file: {
     type: Buffer,
-    required:function() {
-      return this.selectedTransaction === 'others';
-    }
+    sparse: true
   },
 
   user_remarks: {
@@ -126,22 +144,6 @@ const formSchema = new mongoose.Schema({
     }
   ],
 
-  nature: [
-    {
-      label: String,
-      value: String,
-    }
-  ],
-
-  repair_or_replacement:[
-    {
-      label: String,
-      value: {
-        type: Boolean,
-        required: true
-      }
-    }
-  ],
 });
 
 formSchema.path('selectedTransaction').validate(function(value) {

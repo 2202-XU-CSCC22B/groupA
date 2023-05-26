@@ -40,7 +40,7 @@
         <input type="text" v-model="sales_official_receipt" class="form-input" />
 
         <label class="form-label">XU Official Receipt:</label><br>
-        <q-file v-model="sales_receipt_file" @change="handleFileChange" label="Drop file here" class="form-input" />
+        <q-file v-model="file" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('transfer_loc')" class="transaction-details">
@@ -54,20 +54,24 @@
         <input type="text" v-model="transfer_form_number" class="form-input" />
 
         <label class="form-label">Accomplished Transfer Form w/ MR:</label><br>
-        <q-file v-model="transfer_form_file" @change="handleFileChange" label="Drop file here" class="form-input" />
+        <q-file v-model="file" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('repair_replacement')" class="transaction-details">
         <div class="transaction-container">
           <label class="form-label">Warranty availability:</label>
-          <q-select v-model="repair_warranty" :options="repair_or_replacement" class="form-select" />
+          <q-select v-model="repair_warranty" 
+          :options="repair_or_replacement" 
+          emit-value
+          map-options 
+          class="form-select" />
         </div>
         <br>
         <label class="form-label">Company:</label><br>
         <input type="text" v-model="repair_company" placeholder="Enter company" class="form-input" />
 
         <label class="form-label">Assessment from CISO or PPO:</label><br>
-        <q-file v-model="repair_assessment_file" @change="handleFileChange" label="Drop file here" class="form-input" />
+        <q-file v-model="file" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('borrowed')" class="transaction-details">
@@ -78,13 +82,14 @@
         <input type="date" v-model="borrowed_return_date" class="form-input" />
 
         <label class="form-label">Request to Borrow Form:</label><br>
-        <q-file v-model=" borrowed_request_file" @change="handleFileChange" label="Drop file here" class="form-input" />
+        <q-file v-model="file" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('others')" class="transaction-details">
         <label class="form-label">Input your nature of transaction:</label><br>
         <textarea v-model="others_description" placeholder="Enter description" class="form-input" />
-        <q-file v-model="others_file" @change="handleFileChange" label="Drop file here" class="form-input" />
+        <label class="form-label">(Optional)Upload relevant file:</label><br>
+        <q-file v-model="file" label="Drop file here" class="form-input" />
       </div>
 
       <div class = "user-remarks">
@@ -163,23 +168,27 @@ export default {
       curr_date: "",
       selectedTransaction: "",
 
+      file: [],
+      
+
       sales_official_receipt: "",
-      sales_receipt_file: Buffer,
+      sales_receipt_file: null,
 
       transfer_from: "",
       transfer_to: "",
       transfer_form_number: "",
-      transfer_form_file: Buffer,
+      transfer_form_file: null,
 
       repair_company: "",
-      repair_assessment_file: Buffer,
+      repair_assessment_file: null,
+      repair_warranty: null,
 
       borrowed_location: "",
       borrowed_return_date: "",
-      borrowed_request_file: Buffer,
+      borrowed_request_file: null,
 
       others_description: "",
-      others_file:Buffer,
+      others_file:null,
 
       user_remarks: "",
       number_of_items: 0,
@@ -195,8 +204,14 @@ export default {
       repair_or_replacement: [
         { label: "With Warranty", value: true },
         { label: "Without Warranty", value: false }
-      ]
+      ],
+      repair_selected: false,
     };
+  },
+  watch: {
+    selectedRepairWarranty(value) {
+      this.repair_selected = value === true;
+    },
   },
   methods: {
     backDashboard(){
@@ -216,33 +231,58 @@ export default {
       this.item_fields.splice(index, 1);
     },
 
-    handleFileChange(event) {
-      this.file = event.target.files[0];
-    },
+   
 
     async submitForm() {
-      const formData = {
-        name: this.name,
-        curr_date: this.curr_date,
-        selectedTransaction: this.selectedTransaction,
-        sales_official_receipt: this.sales_official_receipt,
-        sales_receipt_file: this.sales_receipt_file,
-        transfer_from: this.transfer_from,
-        transfer_to: this.transfer_to,
-        transfer_form_number: this.transfer_form_number,
-        transfer_form_file: this.transfer_form_file,
-        repair_company: this.repair_company,
-        repair_assessment_file: this.repair_assessment_file,
-        borrowed_location: this.borrowed_location,
-        borrowed_return_date: this.borrowed_return_date,
-        borrowed_request_file: this.borrowed_request_file,
-        others_description: this.others_description,
-        user_remarks: this.user_remarks,
-        item_fields: this.item_fields
-      };
+      const formData = new FormData();
+      formData.append('name', this.name);
+      formData.append('curr_date', this.currDate);
+      formData.append('selectedTransaction', this.selectedTransaction);
+  
+      formData.append('sales_official_receipt', this.sales_official_receipt);
+        
+      formData.append('transfer_from', this.transfer_from);
+      formData.append('transfer_to', this.transfer_to);
+      formData.append('transfer_form_number', this.transfer_form_number);
+      
+      formData.append('repair_company', this.repair_company);
+      formData.append('repair_warranty', this.repair_warranty);
+      
+      formData.append('borrowed_location', this.borrowed_location);
+      formData.append('borrowed_return_date', this.borrowed_return_date);
+      
+      formData.append('others_description', this.others_description);
+    
+      formData.append('user_remarks', this.user_remarks);
+      formData.append('item_fields', this.item_fields);
 
+
+      let fieldName;
+
+      if (this.selectedTransaction === 'sales') {
+        fieldName = 'sales_receipt_file';
+        formData.append(fieldName, this.file);
+      } else if (this.selectedTransaction === 'transfer') {
+        fieldName = 'transfer_form_file';
+        formData.append(fieldName, this.file);
+      } else if (this.selectedTransaction === 'repair') {
+        fieldName = 'repair_assessment_file';
+        formData.append(fieldName, this.file);
+      } else if (this.selectedTransaction === 'borrowed') {
+        fieldName = 'borrowed_request_file';
+        formData.append(fieldName, this.file);
+      } else if (this.selectedTransaction === 'others') {
+        fieldName = 'others_file';
+        formData.append(fieldName, this.file);
+      } else {
+        return res.status(400).json({ message: 'Invalid transaction type' });
+      };
+      
+      console.log(this.file);
+
+      console.log(formData.values());
       try {
-        const response = await api.post('/submit-form', formData);
+        const response = await api.post('/submit-form',formData);
 
         if (response.status === 201) {
           console.log('Form created:', response.data);
