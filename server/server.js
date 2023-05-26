@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const trackRoutes = require('./routes/trackRoutes');
+const formRoutes = require('./routes/formRoute');
 const PORT = 3000;
 
 mongoose.set("strictQuery", false);
@@ -35,6 +36,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+app.use('/form', formRoutes);
 app.use('/track', trackRoutes); // Use the trackRoutes for the /track endpoint
 
 
