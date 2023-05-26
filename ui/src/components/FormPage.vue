@@ -40,7 +40,7 @@
         <input type="text" v-model="sales_official_receipt" class="form-input" />
 
         <label class="form-label">XU Official Receipt:</label><br>
-        <q-file v-model="sales_receipt_file" label="Drop file here" class="form-input" />
+        <q-file v-model="sales_receipt_file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('transfer_loc')" class="transaction-details">
@@ -54,7 +54,7 @@
         <input type="text" v-model="transfer_form_number" class="form-input" />
 
         <label class="form-label">Accomplished Transfer Form w/ MR:</label><br>
-        <q-file v-model="transfer_form_file" label="Drop file here" class="form-input" />
+        <q-file v-model="transfer_form_file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('repair_replacement')" class="transaction-details">
@@ -67,7 +67,7 @@
         <input type="text" v-model="repair_company" placeholder="Enter company" class="form-input" />
 
         <label class="form-label">Assessment from CISO or PPO:</label><br>
-        <q-file v-model="repair_assessment_file" label="Drop file here" class="form-input" />
+        <q-file v-model="repair_assessment_file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('borrowed')" class="transaction-details">
@@ -78,12 +78,13 @@
         <input type="date" v-model="borrowed_return_date" class="form-input" />
 
         <label class="form-label">Request to Borrow Form:</label><br>
-        <q-file v-model=" borrowed_request_file" label="Drop file here" class="form-input" />
+        <q-file v-model=" borrowed_request_file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('others')" class="transaction-details">
         <label class="form-label">Input your nature of transaction:</label><br>
         <textarea v-model="others_description" placeholder="Enter description" class="form-input" />
+        <q-file v-model="others_file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div class = "user-remarks">
@@ -135,20 +136,25 @@
     </div>
 
     <div class="submit">
-      <button type="submit" @click="submittedSuccessfully" class="submit-button">Submit</button>
+      <button @click="submitForm" class="submit-button">Submit</button>
     </div>
   </div>
 </template>
 
 <script>
 import { QSelect } from "quasar";
+import { QFile } from 'quasar';
+import { QBtn } from 'quasar';
 import { api } from 'boot/axios-config.js';
+
 
 
 export default {
   name: "FormPage",
   components: {
-    QSelect
+    QSelect,
+    QFile,
+    QBtn
   },
   data() {
     return {
@@ -158,21 +164,22 @@ export default {
       selectedTransaction: "",
 
       sales_official_receipt: "",
-      sales_receipt_file: null,
+      sales_receipt_file: Buffer,
 
       transfer_from: "",
       transfer_to: "",
       transfer_form_number: "",
-      transfer_form_file: null,
+      transfer_form_file: Buffer,
 
       repair_company: "",
-      repair_assessment_file: null,
+      repair_assessment_file: Buffer,
 
       borrowed_location: "",
       borrowed_return_date: "",
-      borrowed_request_file: null,
+      borrowed_request_file: Buffer,
 
       others_description: "",
+      others_file:Buffer,
 
       user_remarks: "",
       number_of_items: 0,
@@ -204,60 +211,52 @@ export default {
         amount: 0
       });
     },
+
     removeItem(index) {
       this.item_fields.splice(index, 1);
     },
 
-    submittedSuccessfully(){
-      this.$router.push({ path: '/formSubmitted', component: () => import('pages/FormSubmit.vue') });
+    handleFileChange(event) {
+      this.file = event.target.files[0];
     },
-    submitDatabase(){
+
+    async submitForm() {
       const formData = {
-      name: this.name,
-      curr_date: this.curr_date,
-      selectedTransaction: this.selectedTransaction,
-      sales_official_receipt: this.sales_official_receipt,
-      sales_receipt_file: this.sales_receipt_file,
-      transfer_from: this.transfer_from,
-      transfer_to: this.transfer_to,
-      transfer_form_number: this.transfer_form_number,
-      transfer_form_file: this.transfer_form_file,
-      repair_company: this.repair_company,
-      repair_assessment_file: this.repair_assessment_file,
-      borrowed_location: this.borrowed_location,
-      borrowed_return_date: this.borrowed_return_date,
-      borrowed_request_file: this.borrowed_request_file,
-      others_description: this.others_description,
-      user_remarks: this.user_remarks,
-      item_fields: this.item_fields
-    };
+        name: this.name,
+        curr_date: this.curr_date,
+        selectedTransaction: this.selectedTransaction,
+        sales_official_receipt: this.sales_official_receipt,
+        sales_receipt_file: this.sales_receipt_file,
+        transfer_from: this.transfer_from,
+        transfer_to: this.transfer_to,
+        transfer_form_number: this.transfer_form_number,
+        transfer_form_file: this.transfer_form_file,
+        repair_company: this.repair_company,
+        repair_assessment_file: this.repair_assessment_file,
+        borrowed_location: this.borrowed_location,
+        borrowed_return_date: this.borrowed_return_date,
+        borrowed_request_file: this.borrowed_request_file,
+        others_description: this.others_description,
+        user_remarks: this.user_remarks,
+        item_fields: this.item_fields
+      };
 
-    // Validate the form against the schema
-    const { error } = formSchema.validate(formData);
-    if (error) {
-      console.error("Form validation error:", error);
-      // Perform error handling or show an error message to the user
-      return;
+      try {
+        const response = await api.post('/submit-form', formData);
+
+        if (response.status === 201) {
+          console.log('Form created:', response.data);
+          this.$router.push({ path: '/formSubmitted', component: () => import('pages/FormSubmit.vue') });
+        } else {
+          console.log('Failed to send form to the database.');
+        }
+      } catch (error) {
+        console.error('Error sending form:', error);
+      }
     }
 
-    api.post("/form", formData)
-      .then(response => {
-        console.log("Form submitted successfully!");
-        // Reset the form fields or navigate to a success page
-      })
-      .catch(error => {
-        console.error("Form submission error:", error);
-        // Show an error message or perform error handling
-      });
-    },
-    
-    submitForm(){
-      this.submittedSuccessfully();
-      this.submitDatabase();
-    }
-  
   }
-};
+}
 </script>
 <style scoped>
 .form-container {
