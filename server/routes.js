@@ -2,6 +2,10 @@ const express = require("express");
 const SignUp_Login = require("./model");
 const app = express();
 
+const formController = require('./controllers/formController');
+
+router.post('/submit', formController.submitForm);
+
 //stuff!
 app.post("/add_signuplogin", async (request, response) => {
     const { username, email, password } = request.body;
