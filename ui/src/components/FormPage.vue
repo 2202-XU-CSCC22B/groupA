@@ -1,66 +1,94 @@
 <template>
+  <div class = "back-button">
+      <q-btn  flat dense icon="arrow_back" @click="backDashboard" color = "#283971"/>
+  </div>
+
   <div class="form-container">
-    <div class = title>
+
+    <div class = "title">
       Property Pass Form
     </div>
-    
+
+    <div class="part0">
+
+      <div class="input-wrapper">
+        <label class="form-label">Name:</label>
+        <input type="text" v-model="name" class="form-input" />
+      </div>
+
+      <div class="input-wrapper">
+        <label class="form-label">Date:</label>
+        <input type="date" v-model="curr_date" class="form-input" />
+      </div>
+    </div>
+
     <div class="part1">
-      <label class="form-label">Nature of Transaction:</label>
-      <q-select
-        v-model="selectedTransaction"
-        :options="nature"
-        emit-value
-        map-options
-        class="form-select"
-      />
+
+      <div class="transaction-container">
+        <label class="form-label">Nature of Transaction:</label>
+        <q-select
+          v-model="selectedTransaction"
+          :options="nature"
+          emit-value
+          map-options
+          class="form-select"
+        />
+      </div>
 
       <div v-if="selectedTransaction.includes('sales')" class="transaction-details">
-        <label class="form-label">Official Receipt No:</label>
+        <label class="form-label">Official Receipt No:</label><br>
         <input type="text" v-model="sales_official_receipt" class="form-input" />
 
-        <label class="form-label">XU Official Receipt:</label>
-        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
+        <label class="form-label">XU Official Receipt:</label><br>
+        <q-file v-model="sales_receipt_file" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('transfer_loc')" class="transaction-details">
-        <label class="form-label">From:</label>
+        <label class="form-label">From:</label><br>
         <input type="text" v-model="transfer_from" class="form-input" />
 
-        <label class="form-label">To:</label>
+        <label class="form-label">To:</label><br>
         <input type="text" v-model="transfer_to" class="form-input" />
 
-        <label class="form-label">Transfer Form No:</label>
+        <label class="form-label">Transfer Form No:</label><br>
         <input type="text" v-model="transfer_form_number" class="form-input" />
 
-        <label class="form-label">Accomplished Transfer Form w/ MR:</label>
-        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
+        <label class="form-label">Accomplished Transfer Form w/ MR:</label><br>
+        <q-file v-model="transfer_form_file" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('repair_replacement')" class="transaction-details">
-        <label class="form-label">Warranty availability:</label>
-        <q-select v-model="repair_warranty" :options="repair_or_replacement" class="form-select" />
-
-        <label class="form-label">Company:</label>
+        <div class="transaction-container">
+          <label class="form-label">Warranty availability:</label>
+          <q-select v-model="repair_warranty" :options="repair_or_replacement" class="form-select" />
+        </div>
+        <br>
+        <label class="form-label">Company:</label><br>
         <input type="text" v-model="repair_company" placeholder="Enter company" class="form-input" />
 
-        <label class="form-label">Assessment from CISO or PPO:</label>
-        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
+        <label class="form-label">Assessment from CISO or PPO:</label><br>
+        <q-file v-model="repair_assessment_file" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('borrowed')" class="transaction-details">
-        <label class="form-label">Location:</label>
+        <label class="form-label">Location:</label><br>
         <input type="text" v-model="borrowed_location" placeholder="Enter full address" class="form-input" />
 
-        <label class="form-label">Date item returned:</label>
+        <label class="form-label">Date item returned:</label><br>
         <input type="date" v-model="borrowed_return_date" class="form-input" />
 
-        <label class="form-label">Request to Borrow Form:</label>
-        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
+        <label class="form-label">Request to Borrow Form:</label><br>
+        <q-file v-model=" borrowed_request_file" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('others')" class="transaction-details">
-        <label class="form-label">Input your nature of transaction:</label>
-        <input type="text" v-model="others_description" placeholder="Enter description" class="form-input" />
+        <label class="form-label">Input your nature of transaction:</label><br>
+        <textarea v-model="others_description" placeholder="Enter description" class="form-input" />
+      </div>
+
+      <div class = "user-remarks">
+        <label class="form-label">Remarks:</label><br>
+        <textarea v-model="user_remarks" placeholder="Enter remarks" class="form-input" />
       </div>
 
     </div>
@@ -107,13 +135,15 @@
     </div>
 
     <div class="submit">
-      <button type="submit" @click="slideNext" class="submit-button">Submit</button>
+      <button type="submit" @click="submittedSuccessfully" class="submit-button">Submit</button>
     </div>
   </div>
 </template>
 
 <script>
 import { QSelect } from "quasar";
+import { api } from 'boot/axios-config.js';
+
 
 export default {
   name: "FormPage",
@@ -122,20 +152,32 @@ export default {
   },
   data() {
     return {
+
+      name: "",
+      curr_date: "",
       selectedTransaction: "",
+
       sales_official_receipt: "",
+      sales_receipt_file: null,
+
       transfer_from: "",
       transfer_to: "",
       transfer_form_number: "",
-      repair_warranty: null,
+      transfer_form_file: null,
+
       repair_company: "",
+      repair_assessment_file: null,
+
       borrowed_location: "",
       borrowed_return_date: "",
+      borrowed_request_file: null,
+
       others_description: "",
+
+      user_remarks: "",
       number_of_items: 0,
       item_fields: [],
-      currentPosition: "0px",
-      slideWidth: 0,
+    
       nature: [
         { label: "Sales (Scraps, MRF, Vermi, Manresa Farm products, etc.)", value: "sales" },
         { label: "Transfer Location / Property Donation", value: "transfer_loc" },
@@ -144,15 +186,16 @@ export default {
         { label: "Others", value: "others" }
       ],
       repair_or_replacement: [
-        { label: "With Warranty", value: "w_warranty" },
-        { label: "Without Warranty", value: "wo_warranty" }
+        { label: "With Warranty", value: true },
+        { label: "Without Warranty", value: false }
       ]
     };
   },
   methods: {
-    handleFileChange(event) {
-      this.file = event.target.files[0];
+    backDashboard(){
+      this.$router.push({ path: '/dashboard', component: () => import('layouts/MainLayout.vue') });
     },
+
     addItem() {
       this.item_fields.push({
         particulars: "",
@@ -163,7 +206,56 @@ export default {
     },
     removeItem(index) {
       this.item_fields.splice(index, 1);
+    },
+
+    submittedSuccessfully(){
+      this.$router.push({ path: '/formSubmitted', component: () => import('pages/FormSubmit.vue') });
+    },
+    submitDatabase(){
+      const formData = {
+      name: this.name,
+      curr_date: this.curr_date,
+      selectedTransaction: this.selectedTransaction,
+      sales_official_receipt: this.sales_official_receipt,
+      sales_receipt_file: this.sales_receipt_file,
+      transfer_from: this.transfer_from,
+      transfer_to: this.transfer_to,
+      transfer_form_number: this.transfer_form_number,
+      transfer_form_file: this.transfer_form_file,
+      repair_company: this.repair_company,
+      repair_assessment_file: this.repair_assessment_file,
+      borrowed_location: this.borrowed_location,
+      borrowed_return_date: this.borrowed_return_date,
+      borrowed_request_file: this.borrowed_request_file,
+      others_description: this.others_description,
+      user_remarks: this.user_remarks,
+      item_fields: this.item_fields
+    };
+
+    // Validate the form against the schema
+    const { error } = formSchema.validate(formData);
+    if (error) {
+      console.error("Form validation error:", error);
+      // Perform error handling or show an error message to the user
+      return;
     }
+
+    api.post("/form", formData)
+      .then(response => {
+        console.log("Form submitted successfully!");
+        // Reset the form fields or navigate to a success page
+      })
+      .catch(error => {
+        console.error("Form submission error:", error);
+        // Show an error message or perform error handling
+      });
+    },
+    
+    submitForm(){
+      this.submittedSuccessfully();
+      this.submitDatabase();
+    }
+  
   }
 };
 </script>
@@ -173,6 +265,17 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  width: 100%; 
+  overflow-y: auto;
+}
+
+.part0 {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-wrapper {
+  width: 48%; /* Adjust the width as needed */
 }
 
 .title{
@@ -180,6 +283,13 @@ export default {
   font-weight: bold;
   margin-bottom: 20px;
 }
+
+.transaction-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .form-label {
   font-weight: bold;
   margin-bottom: 5px;
@@ -206,6 +316,11 @@ export default {
   margin-bottom: 10px;
 }
 
+.textarea {
+  height: 100px; /* Set a fixed height for the textarea */
+  resize: none; /* Disable resizing */
+}
+
 .part2{
   width:100%;
   display: block;
@@ -229,6 +344,11 @@ export default {
   border-bottom: 1px solid #ccc;
 }
 
+.back-button {
+  margin-right: 10px;
+  margin-left: 0;
+}
+
 .remove-button {
   padding: 5px 10px;
   background-color: #e74c3c;
@@ -236,6 +356,9 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+.remove-button:hover {
+  background-color: #c0392b; /* Change to desired hover background color */
 }
 
 .add-button {
@@ -248,12 +371,21 @@ export default {
   cursor: pointer;
 }
 
+.add-button:hover {
+  background-color: #27ae60; /* Change to desired hover background color */
+}
+
 .submit-button {
   padding: 10px 20px;
-  background-color: #3498db;
+  background-color: #283971;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
+
+.submit-button:hover {
+  background-color: #4866C9;; /* Change to desired hover background color */
+}
+
 </style>

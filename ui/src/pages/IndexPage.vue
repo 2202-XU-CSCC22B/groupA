@@ -3,11 +3,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<body>
-  <div class="container">
-    <input type="checkbox" id="flip">
-    
-    <div class="cover">
+  <body>
+    <div class="container">
+      <input type="checkbox" id="flip">
+
+      <div class="cover">
 
       <div class="front">
         <img src="~assets/backImg.jpg" alt="">
@@ -29,11 +29,11 @@
 
         <div class="forms">
 
-          <div class="form-content">
-            <div class="login-form">
-                <div class="title">Login</div>
-              
-                <form action="#">
+            <div class="form-content">
+              <div class="login-form">
+                  <div class="title">Login</div>
+
+                  <form action="#">
 
                   <div class="input-boxes">
                     <div class="input-box">
@@ -218,7 +218,7 @@ async signup() {
 </script>
 
 
-<style>
+<style scoped>
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
 

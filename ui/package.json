@@ -15,6 +15,7 @@
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "assert": "^2.0.0",
+    "axios": "^1.4.0",
     "core-js": "^3.6.5",
     "crypto": "^1.0.1",
     "fs": "^0.0.1-security",
@@ -38,6 +39,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
     "@quasar/app-webpack": "^3.0.0",
+    "@vue/test-utils": "^2.4.0-alpha.1",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-vue": "^9.0.0",
@@ -46,7 +48,8 @@
     "less-loader": "^11.1.0",
     "prettier": "^2.5.1",
     "stylus": "^0.59.0",
-    "stylus-loader": "^7.1.0"
+    "stylus-loader": "^7.1.0",
+    "vue-jest": "^5.0.0-alpha.10"
   },
   "browserslist": [
     "last 10 Chrome versions",

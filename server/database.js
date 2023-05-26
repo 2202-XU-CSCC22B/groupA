@@ -4,7 +4,7 @@ const { MongoClient } = require('mongodb');
 const url = 'mongodb://localhost:27017';
 
 // Database Name
-const dbName = 'your-database-name';
+const dbName = 'Property Pass System';
 
 // MongoDB client instance
 let client = null;
