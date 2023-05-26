@@ -105,6 +105,13 @@ const formSchema = new mongoose.Schema({
     }
   },
 
+  others_file: {
+    type: Buffer,
+    required:function() {
+      return this.selectedTransaction === 'others';
+    }
+  },
+
   user_remarks: {
     type: String,
     required:false
@@ -123,15 +130,16 @@ const formSchema = new mongoose.Schema({
     {
       label: String,
       value: String,
-      required: true
     }
   ],
 
-  repair_or_replacement: [
+  repair_or_replacement:[
     {
       label: String,
-      value: Boolean,
-      required: true
+      value: {
+        type: Boolean,
+        required: true
+      }
     }
   ],
 });

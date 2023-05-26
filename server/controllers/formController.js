@@ -1,4 +1,4 @@
-const FormSubmission = require("../models/formModel");
+const FormSubmission = require("../models/formModel.js");
 
 exports.createForm = async (req, res) => {
   try {
