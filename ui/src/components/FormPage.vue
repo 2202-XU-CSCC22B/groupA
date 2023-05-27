@@ -10,15 +10,27 @@
     </div>
 
     <div class="part0">
-
       <div class="input-wrapper">
         <label class="form-label">Name:</label>
-        <input type="text" v-model="name" class="form-input" />
+        <input
+          type="text"
+          v-model="name"
+          class="form-input"
+          :class="{ 'required': isFieldRequired(name), 'valid': isFieldValid(name) }"
+          @input="validateInput"
+        />
+        <div v-if="isFieldRequired(name)" class="required-marker">*</div>
       </div>
 
       <div class="input-wrapper">
         <label class="form-label">Date:</label>
-        <input type="date" v-model="curr_date" class="form-input" />
+        <input
+          type="date"
+          v-model="curr_date"
+          class="form-input"
+          :class="{ 'required': isFieldRequired(curr_date), 'valid': isFieldValid(curr_date) }"
+          @input="validateInput"
+        />
       </div>
     </div>
 
@@ -32,12 +44,14 @@
           emit-value
           map-options
           class="form-select"
+          :class="{ 'required': isFieldRequired(selectedTransaction), 'valid': isFieldValid(selectedTransaction) }"
+          @input="validateInput"
         />
       </div>
 
       <div v-if="selectedTransaction.includes('sales')" class="transaction-details">
         <label class="form-label">Official Receipt No:</label><br>
-        <input type="text" v-model="sales_official_receipt" class="form-input" />
+        <input type="text" v-model="sales_official_receipt" class="form-input"/>
 
         <label class="form-label">XU Official Receipt:</label><br>
         <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
@@ -236,7 +250,69 @@ export default {
       this.fileKey = fileKey;
     },
 
+    isFieldRequired(field) {
+      return field === '';
+    },
+    isFieldValid(field) {
+      return field !== '';
+    },
+    validateInput() {
+      // Triggered on input change to validate field and apply appropriate styling
+      this.$forceUpdate();
+    },
+
     async submitForm() {
+
+      const emptyFields = [];
+
+      if (this.isFieldRequired(this.name) && this.name.trim() === '') {
+        emptyFields.push('Name');
+      }
+
+      if (this.isFieldRequired(this.curr_date) && this.curr_date.trim() === '') {
+        emptyFields.push('Date');
+      }
+
+      // Add other required fields validation based on selected transaction
+
+      if (this.selectedTransaction.includes('sales')) {
+        if (this.isFieldRequired(this.sales_official_receipt) && this.sales_official_receipt.trim() === '') {
+          emptyFields.push('Official Receipt No');
+        }
+        // Add other sales specific field validations if needed
+      }
+
+      if (this.selectedTransaction.includes('transfer_loc')) {
+        if (this.isFieldRequired(this.transfer_from) && this.transfer_from.trim() === '') {
+          emptyFields.push('Transfer From');
+        }
+        if (this.isFieldRequired(this.transfer_to) && this.transfer_to.trim() === '') {
+          emptyFields.push('Transfer To');
+        }
+        // Add other transfer_loc specific field validations if needed
+      }
+
+      if (this.selectedTransaction.includes('borrowed')) {
+        if (this.isFieldRequired(this.borrowed_location) && this.borrowed_location.trim() === '') {
+          emptyFields.push('Location');
+        }
+        // Add other borrowed specific field validations if needed
+      }
+
+      if (this.selectedTransaction.includes('repair_replacement')) {
+        if (this.isFieldRequired(this.repair_warranty) && this.repair_warranty.trim() === '') {
+          emptyFields.push('Warranty Availability');
+        }
+        // Add other repair_replacement specific field validations if needed
+      }
+
+      // Display error message if there are empty required fields
+      if (emptyFields.length > 0) {
+        const errorMessage = `Please fill in the following required fields: ${emptyFields.join(', ')}`;
+        alert(errorMessage);
+        return;
+      }
+      
       const formData = {
         name: this.name,
           curr_date: this.curr_date,
@@ -294,7 +370,8 @@ export default {
 }
 
 .input-wrapper {
-  width: 48%; /* Adjust the width as needed */
+  width: 48%; 
+  
 }
 
 .title{
@@ -377,7 +454,7 @@ export default {
   cursor: pointer;
 }
 .remove-button:hover {
-  background-color: #c0392b; /* Change to desired hover background color */
+  background-color: #c0392b; 
 }
 
 .add-button {
@@ -391,7 +468,7 @@ export default {
 }
 
 .add-button:hover {
-  background-color: #27ae60; /* Change to desired hover background color */
+  background-color: #27ae60; 
 }
 
 .submit-button {
@@ -404,7 +481,21 @@ export default {
 }
 
 .submit-button:hover {
-  background-color: #4866C9;; /* Change to desired hover background color */
+  background-color: #4866C9;; 
+}
+
+.required {
+  border-color: red;
+}
+.required-marker {
+  position: absolute;
+  top: -10px;
+  right: -5px;
+  font-size: 20px;
+  color: red;
+}
+.valid {
+  border-color: green;
 }
 
 </style>

@@ -5,6 +5,8 @@ const userRoutes = require('./routes/userRoute');
 const formRoutes = require('./routes/formRoute');
 const trackRoutes = require('./routes/trackRoutes');
 
+const Router = require("./routes");
+
 mongoose.set("strictQuery", false);
 
 const app = express();
@@ -23,7 +25,7 @@ mongoose.connect(
     useUnifiedTopology: false
   });
 
-
+  
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function () {
@@ -44,6 +46,8 @@ app.use((req, res, next) => {
 app.use('/submit-form', formRoutes);
 app.use('/api', userRoutes);
 app.use('/track', trackRoutes);
+
+app.use(Router);
 
 // Start the server
 app.listen(PORT, () => {
