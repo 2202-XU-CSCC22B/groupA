@@ -273,13 +273,15 @@ export default {
         emptyFields.push('Date');
       }
 
-      // Add other required fields validation based on selected transaction
 
       if (this.selectedTransaction.includes('sales')) {
         if (this.isFieldRequired(this.sales_official_receipt) && this.sales_official_receipt.trim() === '') {
           emptyFields.push('Official Receipt No');
         }
-        // Add other sales specific field validations if needed
+        if (this.isFieldRequired(this.fileKey) && this.fileKey.trim() === '') {
+          emptyFields.push('XU Official Receipt');
+        }
+        
       }
 
       if (this.selectedTransaction.includes('transfer_loc')) {
@@ -289,21 +291,36 @@ export default {
         if (this.isFieldRequired(this.transfer_to) && this.transfer_to.trim() === '') {
           emptyFields.push('Transfer To');
         }
-        // Add other transfer_loc specific field validations if needed
+        if (this.isFieldRequired(this.transfer_form_number) && this.transfer_form_number.trim() === ''){
+          emptyFields.push('Transfer Form No')
+        }
+        if (this.isFieldRequired(this.fileKey) && this.fileKey.trim() === '') {
+          emptyFields.push('Accomplished Transfer Form w/ MR');
+        }
       }
 
       if (this.selectedTransaction.includes('borrowed')) {
         if (this.isFieldRequired(this.borrowed_location) && this.borrowed_location.trim() === '') {
           emptyFields.push('Location');
         }
-        // Add other borrowed specific field validations if needed
+        if (this.isFieldRequired(this.borrowed_return_date) && this.borrowed_return_date.trim() === '') {
+          emptyFields.push('Date item returned');
+        }
+        if (this.isFieldRequired(this.fileKey) && this.fileKey.trim() === '') {
+          emptyFields.push('Request to Borrow Form');
+        }
       }
 
       if (this.selectedTransaction.includes('repair_replacement')) {
         if (this.isFieldRequired(this.repair_warranty) && this.repair_warranty.trim() === '') {
           emptyFields.push('Warranty Availability');
         }
-        // Add other repair_replacement specific field validations if needed
+        if (this.isFieldRequired(this.repair_company) && this.repair_company.trim() === '') {
+          emptyFields.push('Company');
+        }
+        if (this.isFieldRequired(this.fileKey) && this.fileKey.trim() === '') {
+          emptyFields.push('Assessment from CISO or PPO');
+        }
       }
 
       // Display error message if there are empty required fields
