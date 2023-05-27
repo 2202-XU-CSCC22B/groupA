@@ -406,16 +406,6 @@ export default {
   margin-top: 20px;
 }
 
-.selected-transaction {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.textarea {
-  height: 100px; /* Set a fixed height for the textarea */
-  resize: none; /* Disable resizing */
-}
-
 .part2{
   width:100%;
   display: block;
@@ -483,18 +473,5 @@ export default {
   background-color: #4866C9;; 
 }
 
-.required {
-  border-color: red;
-}
-.required-marker {
-  position: absolute;
-  top: -10px;
-  right: -5px;
-  font-size: 20px;
-  color: red;
-}
-.valid {
-  border-color: green;
-}
 
 </style>
