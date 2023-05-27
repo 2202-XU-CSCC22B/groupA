@@ -43,7 +43,6 @@ app.use((req, res, next) => {
 
 app.use('/submit-form', formRoutes);
 app.use('/api', userRoutes);
-app.use('/form', formRoutes);
 app.use('/track', trackRoutes);
 
 // Start the server
