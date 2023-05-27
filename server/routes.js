@@ -1,7 +1,6 @@
 const express = require("express");
-const router = express.Router();
-const SignUp_Login = require("./model");
-const app = express();
+const SignUp_Login = require("./models/userModel");
+const app = express.Router();
 
 
 const formController = require('./controllers/formController');

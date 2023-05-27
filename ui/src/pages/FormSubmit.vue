@@ -4,7 +4,7 @@
 
       <div class="button-container">
         <button @click="goBackDashboard" class="back-button">Back to Dashboard</button>
-        <button @click="trackForm" class="track-button">Track Form</button>
+        <button @click="backtoForm" class="track-button">Submit another Form</button>
       </div>
     </div>
   </template>
@@ -16,8 +16,8 @@
         this.$router.push({ path: '/dashboard', component: () => import('layouts/MainLayout.vue') });
       },
 
-      trackForm() {
-        this.$router.push({path: '/track', component: () => import('components/GetForm.vue')});
+      backtoForm() {
+        this.$router.push({path: '/form', component: () => import('components/FormPage.vue')});
       }
     }
   };
