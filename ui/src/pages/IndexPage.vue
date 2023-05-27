@@ -189,7 +189,7 @@ async signup() {
     });
 
     console.log(response.data); 
-    this.signup_verify = "Verify Email then Login.(Check your Spam if it's not in inbox)";
+    this.signup_verify = "Verify Email then Login.Check your Spam if it's not in inbox";
 
     const { data } = response;
 

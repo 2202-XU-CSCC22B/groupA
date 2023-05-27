@@ -35,7 +35,6 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 app.use('/api', userRoutes);
-app.use(bodyParser.json());
 app.use('/form', formRoutes);
 app.use('/track', trackRoutes); 
 
