@@ -5,7 +5,7 @@ const { generateLogToken } = require("../utils");
 const Token = require("../models/token");
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-const { url } = require("inspector");
+
 
 
 // Create User Account

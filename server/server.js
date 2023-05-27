@@ -2,21 +2,27 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoute');
-const cors = require('cors');
-
-const app = express();
+const formRoutes = require('./routes/formRoute');
+const trackRoutes = require('./routes/trackRoutes');
 const PORT = 3000;
 
-// Connect to MongoDB
-const url = 'mongodb+srv://SLP_Property_Pass:ExitPass123@Cluster0.xas87bl.mongodb.net/signup_login';
 
+
+mongoose.set("strictQuery", false);
+
+const app = express();
+
+const user = "zen";
+const pass = "RRqQveYMsiMRzgIR";
+const cluster = "cluster";
+const name = "main";
 
 // Connection to the MongoDB database
 mongoose.connect(
-  `${url}`,
+  `mongodb+srv://${user}:${pass}@${cluster}.mdgajbf.mongodb.net/${name}?retryWrites=true&w=majority`, //mongodb+srv://SLP_Property_Pass:<password>@cluster0.xas87bl.mongodb.net/?retryWrites=true&w=majority
   {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
+    useUnifiedTopology: false
   }
 );
 

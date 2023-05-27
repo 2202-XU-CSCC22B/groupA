@@ -6,7 +6,7 @@
       v-if="icon"
       avatar
     >
-      <q-icon :name="icon" color = '#0c0615'/>
+      <q-icon :name="icon" />
     </q-item-section>
 
     <q-item-section>
@@ -49,6 +49,10 @@ export default defineComponent({
 <style scoped>
 
 .q-item-label {
+  color :#0c0615;
+}
+
+.q-icon {
   color :#0c0615;
 }
 

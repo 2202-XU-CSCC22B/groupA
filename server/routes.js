@@ -2,6 +2,7 @@ const express = require("express");
 const SignUp_Login = require("./model");
 const app = express();
 
+
 const formController = require('./controllers/formController');
 
 router.post('/submit', formController.submitForm);
@@ -27,5 +28,6 @@ app.post("/add_signuplogin", async (request, response) => {
         return response.status(500).json({ error: 'Server error' });
     }
 })
+
 
 module.exports = app;

@@ -18,4 +18,4 @@ Running the backend:  cd to server, on the cmd run : 'nodemon server.js'
 Running the frontend: cd to ui on hte cmd run : 'quasar dev'
 
 # Other necessary information about the code (dependencies, external libraries, etc)
-Run npm install on the root directory of the folder 
+Run npm install on the root directory of the folder

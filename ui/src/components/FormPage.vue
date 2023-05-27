@@ -40,7 +40,7 @@
         <input type="text" v-model="sales_official_receipt" class="form-input" />
 
         <label class="form-label">XU Official Receipt:</label><br>
-        <q-file v-model="sales_receipt_file" label="Drop file here" class="form-input" />
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('transfer_loc')" class="transaction-details">
@@ -54,20 +54,24 @@
         <input type="text" v-model="transfer_form_number" class="form-input" />
 
         <label class="form-label">Accomplished Transfer Form w/ MR:</label><br>
-        <q-file v-model="transfer_form_file" label="Drop file here" class="form-input" />
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('repair_replacement')" class="transaction-details">
         <div class="transaction-container">
           <label class="form-label">Warranty availability:</label>
-          <q-select v-model="repair_warranty" :options="repair_or_replacement" class="form-select" />
+          <q-select v-model="repair_warranty"
+          :options="repair_or_replacement"
+          emit-value
+          map-options
+          class="form-select" />
         </div>
         <br>
         <label class="form-label">Company:</label><br>
         <input type="text" v-model="repair_company" placeholder="Enter company" class="form-input" />
 
         <label class="form-label">Assessment from CISO or PPO:</label><br>
-        <q-file v-model="repair_assessment_file" label="Drop file here" class="form-input" />
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('borrowed')" class="transaction-details">
@@ -78,12 +82,14 @@
         <input type="date" v-model="borrowed_return_date" class="form-input" />
 
         <label class="form-label">Request to Borrow Form:</label><br>
-        <q-file v-model=" borrowed_request_file" label="Drop file here" class="form-input" />
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('others')" class="transaction-details">
         <label class="form-label">Input your nature of transaction:</label><br>
         <textarea v-model="others_description" placeholder="Enter description" class="form-input" />
+        <label class="form-label">(Optional)Upload relevant file:</label><br>
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div class = "user-remarks">
@@ -129,26 +135,31 @@
         </tbody>
       </table>
 
-      
+
       </div>
       <button @click="addItem" class="add-button">Add Item</button>
     </div>
 
     <div class="submit">
-      <button type="submit" @click="submittedSuccessfully" class="submit-button">Submit</button>
+      <button @click="submitForm" class="submit-button">Submit</button>
     </div>
   </div>
 </template>
 
 <script>
 import { QSelect } from "quasar";
+import { QFile } from "quasar";
+import { QBtn } from 'quasar';
 import { api } from 'boot/axios-config.js';
+
 
 
 export default {
   name: "FormPage",
   components: {
-    QSelect
+    QSelect,
+    QFile,
+    QBtn
   },
   data() {
     return {
@@ -157,27 +168,26 @@ export default {
       curr_date: "",
       selectedTransaction: "",
 
+      file: null,
+
       sales_official_receipt: "",
-      sales_receipt_file: null,
 
       transfer_from: "",
       transfer_to: "",
       transfer_form_number: "",
-      transfer_form_file: null,
 
       repair_company: "",
-      repair_assessment_file: null,
+      repair_warranty: null,
 
       borrowed_location: "",
       borrowed_return_date: "",
-      borrowed_request_file: null,
 
       others_description: "",
 
       user_remarks: "",
       number_of_items: 0,
       item_fields: [],
-    
+
       nature: [
         { label: "Sales (Scraps, MRF, Vermi, Manresa Farm products, etc.)", value: "sales" },
         { label: "Transfer Location / Property Donation", value: "transfer_loc" },
@@ -188,8 +198,14 @@ export default {
       repair_or_replacement: [
         { label: "With Warranty", value: true },
         { label: "Without Warranty", value: false }
-      ]
+      ],
+      repair_selected: false,
     };
+  },
+  watch: {
+    selectedRepairWarranty(value) {
+      this.repair_selected = value === true;
+    },
   },
   methods: {
     backDashboard(){
@@ -204,60 +220,63 @@ export default {
         amount: 0
       });
     },
+
     removeItem(index) {
       this.item_fields.splice(index, 1);
     },
 
-    submittedSuccessfully(){
-      this.$router.push({ path: '/formSubmitted', component: () => import('pages/FormSubmit.vue') });
+    handleFileChange(event) {
+      this.file = event.target.files[0];
     },
-    submitDatabase(){
-      const formData = {
-      name: this.name,
-      curr_date: this.curr_date,
-      selectedTransaction: this.selectedTransaction,
-      sales_official_receipt: this.sales_official_receipt,
-      sales_receipt_file: this.sales_receipt_file,
-      transfer_from: this.transfer_from,
-      transfer_to: this.transfer_to,
-      transfer_form_number: this.transfer_form_number,
-      transfer_form_file: this.transfer_form_file,
-      repair_company: this.repair_company,
-      repair_assessment_file: this.repair_assessment_file,
-      borrowed_location: this.borrowed_location,
-      borrowed_return_date: this.borrowed_return_date,
-      borrowed_request_file: this.borrowed_request_file,
-      others_description: this.others_description,
-      user_remarks: this.user_remarks,
-      item_fields: this.item_fields
-    };
 
-    // Validate the form against the schema
-    const { error } = formSchema.validate(formData);
-    if (error) {
-      console.error("Form validation error:", error);
-      // Perform error handling or show an error message to the user
-      return;
+    async submitForm() {
+      const formData = new FormData();
+      formData.append('name', this.name);
+      formData.append('curr_date', this.currDate);
+      formData.append('selectedTransaction', this.selectedTransaction);
+
+      formData.append('sales_official_receipt', this.sales_official_receipt);
+
+      formData.append('transfer_from', this.transfer_from);
+      formData.append('transfer_to', this.transfer_to);
+      formData.append('transfer_form_number', this.transfer_form_number);
+
+      formData.append('repair_company', this.repair_company);
+      formData.append('repair_warranty', this.repair_warranty);
+
+      formData.append('borrowed_location', this.borrowed_location);
+      formData.append('borrowed_return_date', this.borrowed_return_date);
+
+      formData.append('others_description', this.others_description);
+
+      formData.append('user_remarks', this.user_remarks);
+      formData.append('item_fields', this.item_fields);
+
+      formData.append('file', this.file);
+
+
+      try {
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        };
+
+        const response = await api.post('/submit-form', formData, config);
+
+        if (response.status === 201) {
+          console.log('Form created:', response.data);
+          this.$router.push({ path: '/formSubmitted', component: () => import('pages/FormSubmit.vue') });
+        } else {
+          console.log('Failed to send form to the database.');
+        }
+      } catch (error) {
+        console.error('Error sending form:', error);
+      }
     }
 
-    api.post("/form", formData)
-      .then(response => {
-        console.log("Form submitted successfully!");
-        // Reset the form fields or navigate to a success page
-      })
-      .catch(error => {
-        console.error("Form submission error:", error);
-        // Show an error message or perform error handling
-      });
-    },
-    
-    submitForm(){
-      this.submittedSuccessfully();
-      this.submitDatabase();
-    }
-  
   }
-};
+}
 </script>
 <style scoped>
 .form-container {
@@ -265,7 +284,7 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  width: 100%; 
+  width: 100%;
   overflow-y: auto;
 }
 
@@ -329,7 +348,7 @@ export default {
 
 .table-container{
   max-height: 300px;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
 .item-table {
   width: 100%;
