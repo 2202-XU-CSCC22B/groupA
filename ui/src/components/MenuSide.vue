@@ -45,3 +45,11 @@ export default defineComponent({
 })
 </script>
 
+
+<style scoped>
+
+.q-item-label {
+  color :#0c0615;
+}
+
+</style>
