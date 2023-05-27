@@ -189,7 +189,7 @@ async signup() {
     });
 
     console.log(response.data); 
-    this.signup_verify = "Verify Email then Login.Check your Spam if it's not in inbox";
+    this.signup_verify = "Verify Email then Login. Check your Spam if it's not in inbox";
 
     const { data } = response;
 
@@ -199,6 +199,7 @@ async signup() {
       return true;
     } else {
       // Handle different error scenarios
+      this.signup_verify = data.message;
       alert(data.message);
       console.log(data.message);
       return false;
@@ -228,6 +229,7 @@ font-family: "Poppins" , sans-serif;
 body{
 /* width: 100%;
 height: 100%; */
+min-height: 100vh;
 display: flex;
 align-items: center;
 justify-content: center;
@@ -241,7 +243,7 @@ top: 50%;
 left: 50%;
 transform: translate(-50%, -50%);
 
-/* max-width: 900px; */
+max-width: 850px;
 max-height: 750px;
 width: 100%;
 background: #fff;

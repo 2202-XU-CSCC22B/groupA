@@ -1,7 +1,7 @@
 {
-  "name": "login-register",
+  "name": "ingress-engress-management-system",
   "version": "1.0.0",
-  "description": "for login and register",
+  "description": "for property management system of XU Finance by Group A",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
