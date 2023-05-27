@@ -40,7 +40,7 @@
         <input type="text" v-model="sales_official_receipt" class="form-input" />
 
         <label class="form-label">XU Official Receipt:</label><br>
-        <q-file v-model="sales_receipt_file" label="Drop file here" class="form-input" />
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('transfer_loc')" class="transaction-details">
@@ -54,20 +54,24 @@
         <input type="text" v-model="transfer_form_number" class="form-input" />
 
         <label class="form-label">Accomplished Transfer Form w/ MR:</label><br>
-        <q-file v-model="transfer_form_file" label="Drop file here" class="form-input" />
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('repair_replacement')" class="transaction-details">
         <div class="transaction-container">
           <label class="form-label">Warranty availability:</label>
-          <q-select v-model="repair_warranty" :options="repair_or_replacement" class="form-select" />
+          <q-select v-model="repair_warranty" 
+          :options="repair_or_replacement" 
+          emit-value
+          map-options 
+          class="form-select" />
         </div>
         <br>
         <label class="form-label">Company:</label><br>
         <input type="text" v-model="repair_company" placeholder="Enter company" class="form-input" />
 
         <label class="form-label">Assessment from CISO or PPO:</label><br>
-        <q-file v-model="repair_assessment_file" label="Drop file here" class="form-input" />
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('borrowed')" class="transaction-details">
@@ -78,12 +82,14 @@
         <input type="date" v-model="borrowed_return_date" class="form-input" />
 
         <label class="form-label">Request to Borrow Form:</label><br>
-        <q-file v-model=" borrowed_request_file" label="Drop file here" class="form-input" />
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('others')" class="transaction-details">
         <label class="form-label">Input your nature of transaction:</label><br>
         <textarea v-model="others_description" placeholder="Enter description" class="form-input" />
+        <label class="form-label">(Optional)Upload relevant file:</label><br>
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div class = "user-remarks">
@@ -135,20 +141,25 @@
     </div>
 
     <div class="submit">
-      <button type="submit" @click="submittedSuccessfully" class="submit-button">Submit</button>
+      <button @click="submitForm" class="submit-button">Submit</button>
     </div>
   </div>
 </template>
 
 <script>
 import { QSelect } from "quasar";
+import { QFile } from "quasar";
+import { QBtn } from 'quasar';
 import { api } from 'boot/axios-config.js';
+
 
 
 export default {
   name: "FormPage",
   components: {
-    QSelect
+    QSelect,
+    QFile,
+    QBtn
   },
   data() {
     return {
@@ -157,21 +168,22 @@ export default {
       curr_date: "",
       selectedTransaction: "",
 
-      sales_official_receipt: "",
-      sales_receipt_file: null,
+      file: null,
+      fileKey: "",
+      
 
+      sales_official_receipt: "",
+      
       transfer_from: "",
       transfer_to: "",
       transfer_form_number: "",
-      transfer_form_file: null,
-
+      
       repair_company: "",
-      repair_assessment_file: null,
+      repair_warranty: null,
 
       borrowed_location: "",
       borrowed_return_date: "",
-      borrowed_request_file: null,
-
+    
       others_description: "",
 
       user_remarks: "",
@@ -188,8 +200,14 @@ export default {
       repair_or_replacement: [
         { label: "With Warranty", value: true },
         { label: "Without Warranty", value: false }
-      ]
+      ],
+      repair_selected: false,
     };
+  },
+  watch: {
+    selectedRepairWarranty(value) {
+      this.repair_selected = value === true;
+    },
   },
   methods: {
     backDashboard(){
@@ -204,60 +222,61 @@ export default {
         amount: 0
       });
     },
+
     removeItem(index) {
       this.item_fields.splice(index, 1);
     },
 
-    submittedSuccessfully(){
-      this.$router.push({ path: '/formSubmitted', component: () => import('pages/FormSubmit.vue') });
+    handleFileChange(event) {
+      this.file = event.target.files[0];
+
+      const fileName = this.file.name;
+      const fileKey = fileName.split('.')[0];
+
+      this.fileKey = fileKey;
     },
-    submitDatabase(){
+
+    async submitForm() {
       const formData = {
-      name: this.name,
-      curr_date: this.curr_date,
-      selectedTransaction: this.selectedTransaction,
-      sales_official_receipt: this.sales_official_receipt,
-      sales_receipt_file: this.sales_receipt_file,
-      transfer_from: this.transfer_from,
-      transfer_to: this.transfer_to,
-      transfer_form_number: this.transfer_form_number,
-      transfer_form_file: this.transfer_form_file,
-      repair_company: this.repair_company,
-      repair_assessment_file: this.repair_assessment_file,
-      borrowed_location: this.borrowed_location,
-      borrowed_return_date: this.borrowed_return_date,
-      borrowed_request_file: this.borrowed_request_file,
-      others_description: this.others_description,
-      user_remarks: this.user_remarks,
-      item_fields: this.item_fields
-    };
+        name: this.name,
+          curr_date: this.curr_date,
+          selectedTransaction: this.selectedTransaction,
+          sales_official_receipt: this.sales_official_receipt,
+          
+          transfer_from: this.transfer_from,
+          transfer_to: this.transfer_to,
+          transfer_form_number: this.transfer_form_number,
+          
+          repair_company: this.repair_company,
+          repair_warranty: this.repair_warranty,
+          
+          borrowed_location: this.borrowed_location,
+          borrowed_return_date: this.borrowed_return_date,
+          
+          others_description: this.others_description,
 
-    // Validate the form against the schema
-    const { error } = formSchema.validate(formData);
-    if (error) {
-      console.error("Form validation error:", error);
-      // Perform error handling or show an error message to the user
-      return;
+          file: this.fileKey,
+
+          user_remarks: this.user_remarks,
+          item_fields: this.item_fields,
+        };
+
+        try {
+          const response = await api.post('/submit-form', formData);
+
+          if (response.status === 201) {
+            console.log('Form created:', response.data);
+            this.$router.push({ path: '/formSubmitted', component: () => import('pages/FormSubmit.vue') });
+          } else {
+            console.log('Failed to send form to the database.');
+          }
+        } catch (error) {
+          console.error('Error sending form:', error);
+        }
     }
 
-    api.post("/form", formData)
-      .then(response => {
-        console.log("Form submitted successfully!");
-        // Reset the form fields or navigate to a success page
-      })
-      .catch(error => {
-        console.error("Form submission error:", error);
-        // Show an error message or perform error handling
-      });
-    },
-    
-    submitForm(){
-      this.submittedSuccessfully();
-      this.submitDatabase();
-    }
-  
   }
-};
+}
 </script>
 <style scoped>
 .form-container {

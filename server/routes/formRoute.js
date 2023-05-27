@@ -4,6 +4,6 @@ const formController = require('../controllers/formController');
 const router = express.Router();
 
 // Create a new form
-router.post("/", formController.createForm);
+router.post("/submit-form", formController.createForm);
 
 module.exports = router;

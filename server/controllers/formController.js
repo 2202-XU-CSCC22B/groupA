@@ -1,4 +1,5 @@
-const FormSubmission = require("../models/formModel");
+const FormSubmission = require("../models/formModel.js");
+
 
 exports.createForm = async (req, res) => {
   try {
@@ -7,6 +8,6 @@ exports.createForm = async (req, res) => {
     res.status(201).send(form);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: "Failed to create form", message: error.message });
+    res.status(500).send({ error: 'Failed to create form', message: error.message });
   }
-};
+  };
