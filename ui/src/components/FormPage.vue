@@ -12,25 +12,12 @@
     <div class="part0">
       <div class="input-wrapper">
         <label class="form-label">Name:</label>
-        <input
-          type="text"
-          v-model="name"
-          class="form-input"
-          :class="{ 'required': isFieldRequired(name), 'valid': isFieldValid(name) }"
-          @input="validateInput"
-        />
-        <div v-if="isFieldRequired(name)" class="required-marker">*</div>
+        <input type="text" v-model="name" class="form-input" />
       </div>
 
       <div class="input-wrapper">
         <label class="form-label">Date:</label>
-        <input
-          type="date"
-          v-model="curr_date"
-          class="form-input"
-          :class="{ 'required': isFieldRequired(curr_date), 'valid': isFieldValid(curr_date) }"
-          @input="validateInput"
-        />
+        <input type="date" v-model="curr_date" class="form-input" />
       </div>
     </div>
 
@@ -44,8 +31,6 @@
           emit-value
           map-options
           class="form-select"
-          :class="{ 'required': isFieldRequired(selectedTransaction), 'valid': isFieldValid(selectedTransaction) }"
-          @input="validateInput"
         />
       </div>
 
@@ -253,13 +238,6 @@ export default {
     isFieldRequired(field) {
       return field === '';
     },
-    isFieldValid(field) {
-      return field !== '';
-    },
-    validateInput() {
-      // Triggered on input change to validate field and apply appropriate styling
-      this.$forceUpdate();
-    },
 
     async submitForm() {
 
@@ -271,6 +249,10 @@ export default {
 
       if (this.isFieldRequired(this.curr_date) && this.curr_date.trim() === '') {
         emptyFields.push('Date');
+      }
+
+      if (this.isFieldRequired(this.selectedTransaction) && this.selectedTransaction.trim() === '') {
+        emptyFields.push('Nature of Transaction');
       }
 
 
