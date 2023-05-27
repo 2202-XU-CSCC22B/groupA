@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/'); // Specify the destination directory to store the uploaded files
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname); // Use the original filename for the uploaded file
+    cb(null, this.file); // Use the original filename for the uploaded file
   }
 });
 
@@ -18,26 +18,8 @@ exports.upload = upload;
 
 exports.createForm = [
   function (req, res, next) {
-    const selectedTransaction = req.body.selectedTransaction; // Get the selected transaction from the request body
-
-    // Determine the field name based on the selected transaction
-    let fieldName;
-    if (selectedTransaction === 'sales') {
-      fieldName = 'sales_receipt_file';
-    } else if (selectedTransaction === 'transfer') {
-      fieldName = 'transfer_form_file';
-    } else if (selectedTransaction === 'repair') {
-      fieldName = 'repair_assessment_file';
-    } else if (selectedTransaction === 'borrowed') {
-      fieldName = 'borrowed_request_file';
-    } else if (selectedTransaction === 'others') {
-      fieldName = 'others_file';
-    } else {
-      return res.status(400).json({ message: 'Invalid transaction type' });
-    }
-
     // Use the determined field name in the upload middleware
-    upload.single(fieldName)(req, res, function (err) {
+    upload.single(this.file)(req, res, function (err) {
       if (err) {
         // Handle error while uploading file
         return next(err);
