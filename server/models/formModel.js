@@ -21,88 +21,85 @@ const formSchema = new mongoose.Schema({
     type: String,
     required:function() {
       return this.selectedTransaction === 'sales';
-    }
+    },
+    sparse: true
   },
 
-  sales_receipt_file: {
-    type: Buffer,
-    required:function() {
-      return this.selectedTransaction === 'sales';
-    }
-  },
 
   //transfer location
   transfer_from: {
     type: String,
     required:function() {
       return this.selectedTransaction === 'transfer_loc';
-    }
+    },
+    sparse: true
   },
 
   transfer_to: {
     type: String,
     required:function() {
       return this.selectedTransaction === 'transfer_loc';
-    }
+    },
+    sparse: true
   },
 
   transfer_form_number: {
     type: String,
     required:function() {
       return this.selectedTransaction === 'transfer_loc';
-    }
+    },
+    sparse: true
   },
   
-  transfer_form_file: {
-    type: Buffer,
-    required:function() {
-      return this.selectedTransaction === 'transfer_loc';
-    }
-  },
 
   //repair or replacement
   repair_company: {
     type: String,
     required:function() {
       return this.selectedTransaction === 'repair_replacement';
-    }
+    },
+    sparse: true
   },
 
-  repair_assessment_file: {
-    type: Buffer,
+  repair_warranty: {
+    type: Boolean,
     required:function() {
       return this.selectedTransaction === 'repair_replacement';
-    }
+    },
+    sparse: true
   },
+
 
   //borrowed
   borrowed_location: {
     type: String,
     required:function() {
       return this.selectedTransaction === 'borrowed';
-    }
+    },
+    sparse: true
   },
 
   borrowed_return_date:{
     type: Date,
     required:function() {
       return this.selectedTransaction === 'borrowed';
-    }
+    },
+    sparse: true
   },
 
-  borrowed_request_file: {
-    type: Buffer,
-    required:function() {
-      return this.selectedTransaction === 'borrowed';
-    }
-  },
 
   //others
   others_description: {
     type: String,
     required:function() {
       return this.selectedTransaction === 'others';
-    }
+    },
+    sparse: true
+  },
+
+  file: {
+    type: Buffer,
+    sparse: true
   },
 
   user_remarks: {
@@ -119,21 +116,6 @@ const formSchema = new mongoose.Schema({
     }
   ],
 
-  nature: [
-    {
-      label: String,
-      value: String,
-      required: true
-    }
-  ],
-
-  repair_or_replacement: [
-    {
-      label: String,
-      value: Boolean,
-      required: true
-    }
-  ],
 });
 
 formSchema.path('selectedTransaction').validate(function(value) {
