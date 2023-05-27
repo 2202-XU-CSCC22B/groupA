@@ -40,7 +40,7 @@
         <input type="text" v-model="sales_official_receipt" class="form-input" />
 
         <label class="form-label">XU Official Receipt:</label><br>
-        <q-file v-model="file" label="Drop file here" class="form-input" />
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('transfer_loc')" class="transaction-details">
@@ -54,7 +54,7 @@
         <input type="text" v-model="transfer_form_number" class="form-input" />
 
         <label class="form-label">Accomplished Transfer Form w/ MR:</label><br>
-        <q-file v-model="file" label="Drop file here" class="form-input" />
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('repair_replacement')" class="transaction-details">
@@ -71,7 +71,7 @@
         <input type="text" v-model="repair_company" placeholder="Enter company" class="form-input" />
 
         <label class="form-label">Assessment from CISO or PPO:</label><br>
-        <q-file v-model="file" label="Drop file here" class="form-input" />
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('borrowed')" class="transaction-details">
@@ -82,14 +82,14 @@
         <input type="date" v-model="borrowed_return_date" class="form-input" />
 
         <label class="form-label">Request to Borrow Form:</label><br>
-        <q-file v-model="file" label="Drop file here" class="form-input" />
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div v-if="selectedTransaction.includes('others')" class="transaction-details">
         <label class="form-label">Input your nature of transaction:</label><br>
         <textarea v-model="others_description" placeholder="Enter description" class="form-input" />
         <label class="form-label">(Optional)Upload relevant file:</label><br>
-        <q-file v-model="file" label="Drop file here" class="form-input" />
+        <q-file v-model="file" @change="handleFileChange" label="Drop file here" class="form-input" />
       </div>
 
       <div class = "user-remarks">
@@ -148,7 +148,7 @@
 
 <script>
 import { QSelect } from "quasar";
-import { QFile } from 'quasar';
+import { QFile } from "quasar";
 import { QBtn } from 'quasar';
 import { api } from 'boot/axios-config.js';
 
@@ -168,27 +168,21 @@ export default {
       curr_date: "",
       selectedTransaction: "",
 
-      file: [],
-      
+      file: null,
 
       sales_official_receipt: "",
-      sales_receipt_file: null,
-
+      
       transfer_from: "",
       transfer_to: "",
       transfer_form_number: "",
-      transfer_form_file: null,
-
+      
       repair_company: "",
-      repair_assessment_file: null,
       repair_warranty: null,
 
       borrowed_location: "",
       borrowed_return_date: "",
-      borrowed_request_file: null,
-
+    
       others_description: "",
-      others_file:null,
 
       user_remarks: "",
       number_of_items: 0,
@@ -231,7 +225,9 @@ export default {
       this.item_fields.splice(index, 1);
     },
 
-   
+    handleFileChange(event) {
+      this.file = event.target.files[0];
+    },
 
     async submitForm() {
       const formData = new FormData();
@@ -256,33 +252,17 @@ export default {
       formData.append('user_remarks', this.user_remarks);
       formData.append('item_fields', this.item_fields);
 
+      formData.append('file', this.file);
 
-      let fieldName;
-
-      if (this.selectedTransaction === 'sales') {
-        fieldName = 'sales_receipt_file';
-        formData.append(fieldName, this.file);
-      } else if (this.selectedTransaction === 'transfer') {
-        fieldName = 'transfer_form_file';
-        formData.append(fieldName, this.file);
-      } else if (this.selectedTransaction === 'repair') {
-        fieldName = 'repair_assessment_file';
-        formData.append(fieldName, this.file);
-      } else if (this.selectedTransaction === 'borrowed') {
-        fieldName = 'borrowed_request_file';
-        formData.append(fieldName, this.file);
-      } else if (this.selectedTransaction === 'others') {
-        fieldName = 'others_file';
-        formData.append(fieldName, this.file);
-      } else {
-        return res.status(400).json({ message: 'Invalid transaction type' });
-      };
       
-      console.log(this.file);
-
-      console.log(formData.values());
       try {
-        const response = await api.post('/submit-form',formData);
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        };
+
+        const response = await api.post('/submit-form', formData, config);
 
         if (response.status === 201) {
           console.log('Form created:', response.data);

@@ -33,7 +33,7 @@ app.use((req, res, next) => {
 
 
 app.use(express.json());
-app.post('/upload', formController.upload.single('file'), (req, res) => {
+app.post('/submit-form', formController.upload.single('file'), (req, res) => {
   // Handle the uploaded file
   console.log(req.file); // Access the uploaded file using req.file object
 

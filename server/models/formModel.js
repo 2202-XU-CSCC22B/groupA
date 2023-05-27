@@ -25,13 +25,6 @@ const formSchema = new mongoose.Schema({
     sparse: true
   },
 
-  sales_receipt_file: {
-    type: Buffer,
-    required:function() {
-      return this.selectedTransaction === 'sales';
-    },
-    sparse: true
-  },
 
   //transfer location
   transfer_from: {
@@ -58,13 +51,6 @@ const formSchema = new mongoose.Schema({
     sparse: true
   },
   
-  transfer_form_file: {
-    type: Buffer,
-    required:function() {
-      return this.selectedTransaction === 'transfer_loc';
-    },
-    sparse: true
-  },
 
   //repair or replacement
   repair_company: {
@@ -83,13 +69,6 @@ const formSchema = new mongoose.Schema({
     sparse: true
   },
 
-  repair_assessment_file: {
-    type: Buffer,
-    required:function() {
-      return this.selectedTransaction === 'repair_replacement';
-    },
-    sparse: true
-  },
 
   //borrowed
   borrowed_location: {
@@ -108,13 +87,6 @@ const formSchema = new mongoose.Schema({
     sparse: true
   },
 
-  borrowed_request_file: {
-    type: Buffer,
-    required:function() {
-      return this.selectedTransaction === 'borrowed';
-    },
-    sparse: true
-  },
 
   //others
   others_description: {
@@ -125,7 +97,7 @@ const formSchema = new mongoose.Schema({
     sparse: true
   },
 
-  others_file: {
+  file: {
     type: Buffer,
     sparse: true
   },
