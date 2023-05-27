@@ -98,8 +98,8 @@ const formSchema = new mongoose.Schema({
   },
 
   file: {
-    data: Buffer,
-    contentType: String
+    type: String
+
   },
 
   user_remarks: {

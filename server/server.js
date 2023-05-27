@@ -1,8 +1,6 @@
 const express = require('express');
-const multer = require('multer');
 const mongoose = require('mongoose');
 const formRoutes = require('./routes/formRoute');
-const formController = require('./controllers/formController');
 const app = express();
 const Router = require("./routes");
 
@@ -33,14 +31,8 @@ app.use((req, res, next) => {
 
 
 app.use(express.json());
-app.post('/submit-form', formController.upload.single('file'), (req, res) => {
-  // Handle the uploaded file
-  console.log(req.file); // Access the uploaded file using req.file object
-
-  // Respond with a success message or perform further operations
-  res.send('File uploaded successfully');
-});
 app.use('/submit-form', formRoutes);
+
 app.use(Router);
 
 // for Mac

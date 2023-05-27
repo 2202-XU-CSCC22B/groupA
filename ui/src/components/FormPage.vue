@@ -169,6 +169,8 @@ export default {
       selectedTransaction: "",
 
       file: null,
+      fileKey: "",
+      
 
       sales_official_receipt: "",
       
@@ -227,52 +229,50 @@ export default {
 
     handleFileChange(event) {
       this.file = event.target.files[0];
+
+      const fileName = this.file.name;
+      const fileKey = fileName.split('.')[0];
+
+      this.fileKey = fileKey;
     },
 
     async submitForm() {
-      const formData = new FormData();
-      formData.append('name', this.name);
-      formData.append('curr_date', this.currDate);
-      formData.append('selectedTransaction', this.selectedTransaction);
-  
-      formData.append('sales_official_receipt', this.sales_official_receipt);
-        
-      formData.append('transfer_from', this.transfer_from);
-      formData.append('transfer_to', this.transfer_to);
-      formData.append('transfer_form_number', this.transfer_form_number);
-      
-      formData.append('repair_company', this.repair_company);
-      formData.append('repair_warranty', this.repair_warranty);
-      
-      formData.append('borrowed_location', this.borrowed_location);
-      formData.append('borrowed_return_date', this.borrowed_return_date);
-      
-      formData.append('others_description', this.others_description);
-    
-      formData.append('user_remarks', this.user_remarks);
-      formData.append('item_fields', this.item_fields);
+      const formData = {
+        name: this.name,
+          curr_date: this.curr_date,
+          selectedTransaction: this.selectedTransaction,
+          sales_official_receipt: this.sales_official_receipt,
+          
+          transfer_from: this.transfer_from,
+          transfer_to: this.transfer_to,
+          transfer_form_number: this.transfer_form_number,
+          
+          repair_company: this.repair_company,
+          repair_warranty: this.repair_warranty,
+          
+          borrowed_location: this.borrowed_location,
+          borrowed_return_date: this.borrowed_return_date,
+          
+          others_description: this.others_description,
 
-      formData.append('file', this.file);
+          file: this.fileKey,
 
-      
-      try {
-        const config = {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+          user_remarks: this.user_remarks,
+          item_fields: this.item_fields,
         };
 
-        const response = await api.post('/submit-form', formData, config);
+        try {
+          const response = await api.post('/submit-form', formData);
 
-        if (response.status === 201) {
-          console.log('Form created:', response.data);
-          this.$router.push({ path: '/formSubmitted', component: () => import('pages/FormSubmit.vue') });
-        } else {
-          console.log('Failed to send form to the database.');
+          if (response.status === 201) {
+            console.log('Form created:', response.data);
+            this.$router.push({ path: '/formSubmitted', component: () => import('pages/FormSubmit.vue') });
+          } else {
+            console.log('Failed to send form to the database.');
+          }
+        } catch (error) {
+          console.error('Error sending form:', error);
         }
-      } catch (error) {
-        console.error('Error sending form:', error);
-      }
     }
 
   }
