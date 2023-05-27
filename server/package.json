@@ -1,7 +1,7 @@
 {
-  "name": "login-register",
+  "name": "ingress-engress-management-system",
   "version": "1.0.0",
-  "description": "for login and register",
+  "description": "for property management system of XU Finance by Group A",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,11 +10,21 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "cors": "^2.8.5",
     "mon": "^0.0.8",
     "node": "^20.1.0",
     "nodemon": "^2.0.22"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.2.1",
+    "nodemailer": "^6.9.2"
   }
 }

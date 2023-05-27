@@ -135,7 +135,7 @@
         </tbody>
       </table>
 
-      
+
       </div>
       <button @click="addItem" class="add-button">Add Item</button>
     </div>
@@ -189,7 +189,7 @@ export default {
       user_remarks: "",
       number_of_items: 0,
       item_fields: [],
-    
+
       nature: [
         { label: "Sales (Scraps, MRF, Vermi, Manresa Farm products, etc.)", value: "sales" },
         { label: "Transfer Location / Property Donation", value: "transfer_loc" },
@@ -284,7 +284,7 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  width: 100%; 
+  width: 100%;
   overflow-y: auto;
 }
 
@@ -348,7 +348,7 @@ export default {
 
 .table-container{
   max-height: 300px;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
 .item-table {
   width: 100%;

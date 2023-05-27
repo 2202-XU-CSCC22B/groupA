@@ -1,6 +1,15 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const userRoutes = require('./routes/userRoute');
 const formRoutes = require('./routes/formRoute');
+const trackRoutes = require('./routes/trackRoutes');
+
+
+
+
+mongoose.set("strictQuery", false);
+
 const app = express();
 const Router = require("./routes");
 
@@ -41,8 +50,9 @@ app.get('/', (req, res) => {
 });
 
 app.use(express.json());
+app.use('/api', userRoutes);
 app.use('/form', formRoutes);
-app.use('/track', trackRoutes); // Use the trackRoutes for the /track endpoint
+app.use('/track', trackRoutes); 
 
 
 // Start the server
