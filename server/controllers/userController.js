@@ -44,7 +44,7 @@ const signup = async (request, response) => {
     const verify = await verifmail(user.email, link);
     if(verify) {
       response.status(200).send({
-      message: "Email sent! Check your mail"
+      message: "Email sent! Check your inbox or spam"
     });
     } else {
       "Email not sent"
