@@ -33,13 +33,15 @@
               <div class="login-form">
                   <div class="title">Login</div>
 
-                  <form action="#">
+                  <form action="#" @submit.prevent="submitForm">
 
                   <div class="input-boxes">
                     <div class="input-box">
                       <i class="fas fa-envelope"></i>
-                      <input v-model="email" type="email" placeholder="Enter your email" required>
+                      <input v-model="email" type="email" placeholder="Enter your email" required @blur="validateEmail">
                     </div>
+
+                    <p v-if="errors && errors.email" style="color: red; font-weight: 500;">{{errors.email}}</p>
 
                     <div class="input-box">
                       <i class="fas fa-lock"></i>
@@ -120,9 +122,29 @@ data() {
     loggedIn: false,
     errorMsg: '',
     signup_verify: '',
+    errors: null,
   };
 },
 methods: {
+  async submitForm() {
+      const errors = {};
+      if (!this.email) {
+        errors.email = 'Email is required';
+      } else if (!/^[^@]+@\w+(\.\w+)+\w$/.test(this.email)) {
+        errors.email = 'Invalid email';
+      }
+
+      if (Object.keys(errors).length > 0) {
+        this.errors = errors;
+        return;
+      } else {
+        this.errors = null;
+      }
+
+      // Handle submitting form
+    }
+  },
+
   async handleLogin() {
   const loginResult = await this.login();
 
@@ -210,7 +232,6 @@ async signup() {
     return false;
   }
 },
-}
 };
 </script>
 

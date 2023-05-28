@@ -68,10 +68,10 @@ export default {
 
   methods: {
       sendSMS() {
-      const phoneNumber = '+639358403712'
-      const message = 'Good day! There is a pending HRSI form that needs your attention.'
-      const accountSid = 'ACc482a44e914ba27f3af09bab31fc6e4c'
-      const authToken = 'f95b99ed53499e65ef6b21297cdeff70'
+      const phoneNumber = '+639358403712';
+      const message = 'Good day! There is a pending HRSI form that needs your attention.';
+      const accountSid = 'ACc482a44e914ba27f3af09bab31fc6e4c';
+      const authToken = '470c95ea86473c453219894596578a0c';
 
       fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`, {
         method: 'POST',
