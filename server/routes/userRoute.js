@@ -1,12 +1,10 @@
 const express = require('express');
-const userController = require('../controllers/userController');
-
 const router = express.Router();
+const userController = require('../controllers/userController');
+// const token = require("../models/token");
 
-// User registration route
-router.post('/register', userController.registerUser);
-
-// User login route
-router.post('/login', userController.loginUser);
+router.post('/signup', userController.signup);
+router.get('/login', userController.login);
+router.get('/confirm/:token', userController.confirm);
 
 module.exports = router;

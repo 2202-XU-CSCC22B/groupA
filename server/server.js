@@ -1,47 +1,57 @@
+require('dotenv').config();
 const express = require('express');
-const { MongoClient } = require('mongodb');
-const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const userRoutes = require('./routes/userRoute');
+const formRoutes = require('./routes/formRoute');
+const trackRoutes = require('./routes/trackRoutes');
+
+const Router = require("./routes");
+
+mongoose.set("strictQuery", false);
 
 const app = express();
+const PORT = 3000;
 
-// Middleware
-app.use(bodyParser.json());
 
-// Connect to MongoDB
-const url = 'mongodb+srv://SLP_Property_Pass:ExitPass123@cluster0.xas87bl.mongodb.net/';
-const client = new MongoClient(mongoURI, { useUnifiedTopology: true });
+const pass = "ExitPass123";
+const cluster = "cluster0";
+const name = "signup_login";
 
-client.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MongoDB:', err);
-    return;
-  }
-
-  console.log('Connected to MongoDB');
-
-  const db = client.db();
-
-  // Start the server
-  app.listen(3000, () => {
-    console.log('Server started on port 3000');
+// Connection to the MongoDB database
+mongoose.connect(
+  `mongodb+srv://SLP_Property_Pass:${pass}@${cluster}.xas87bl.mongodb.net/${name}?retryWrites=true&w=majority`, //mongodb+srv://SLP_Property_Pass:<password>@cluster0.xas87bl.mongodb.net/?retryWrites=true&w=majority
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: false
   });
+
+  
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function () {
+  console.log("Connected successfully");
 });
 
-// Handle POST request to save data
-app.post('/api/save-data', (req, res) => {
-  const { selectedOption, selectedDate } = req.body;
+app.use(express.json());
 
-  const collection = client.db().collection('your-collection-name');
-
-  // Insert a new document into your MongoDB collection
-  collection.insertOne({ selectedOption, selectedDate }, (err, result) => {
-    if (err) {
-      console.error('Error saving data:', err);
-      res.status(500).json({ message: 'An error occurred' });
-      return;
-    }
-
-    res.status(201).json({ message: 'Data saved successfully' });
-  });
+// Enable CORS headers
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  next();
 });
 
+app.use('/submit-form', formRoutes);
+app.use('/api', userRoutes);
+app.use('/track', trackRoutes);
+
+app.use(Router);
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running at port ${PORT}`);
+});
+
+module.exports = app;

@@ -1,5 +1,9 @@
 <template>
-  <router-view />
+  <div class="container">
+    <!-- <div class="content"> -->
+      <router-view />
+    <!-- </div> -->
+  </div>
 </template>
 
 <script>
@@ -9,3 +13,7 @@ export default defineComponent({
   name: 'App'
 })
 </script>
+
+<style>
+
+</style>
