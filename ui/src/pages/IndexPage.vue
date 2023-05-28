@@ -33,7 +33,7 @@
               <div class="login-form">
                   <div class="title">Login</div>
 
-                  <form action="#" @submit.prevent="submitForm">
+                  <form @submit.prevent="submitForm">
 
                   <div class="input-boxes">
                     <div class="input-box">
@@ -67,7 +67,7 @@
           <div class="signup-form">
             <div class="title">Signup</div>
               
-            <form action="#">
+            <form @submit.prevent="submitForm">
               <div class="input-boxes">
                 
                 <div class="input-box">
@@ -79,6 +79,8 @@
                   <i class="fas fa-envelope"></i>
                   <input v-model="email" type="text" placeholder="Enter your email" required>
                 </div>
+
+                <p v-if="errors && errors.email" style="color: red; font-weight: 500;">{{errors.email}}</p>
 
                 <div class="input-box">
                   <i class="fas fa-lock"></i>
@@ -117,7 +119,7 @@ import {api} from 'boot/axios-config.js'; // Importing axios directly
 
 export default {
 name: 'IndexPage',
-data() {
+data:() => {
   return {
     loggedIn: false,
     errorMsg: '',
@@ -140,8 +142,6 @@ methods: {
       } else {
         this.errors = null;
       }
-
-      // Handle submitting form
     }
   },
 
