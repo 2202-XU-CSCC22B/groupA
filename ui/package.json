@@ -2,7 +2,7 @@
   "name": "ui",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "Property Pass System",
+  "productName": "Ingress-Egress Management System",
   "author": "Christianne San Jose <20140006628@my.xu.edu.ph>",
   "private": true,
   "scripts": {
