@@ -260,7 +260,7 @@ export default {
         if (this.isFieldRequired(this.sales_official_receipt) && this.sales_official_receipt.trim() === '') {
           emptyFields.push('Official Receipt No');
         }
-        if (this.isFieldRequired(this.fileKey) && this.fileKey.trim() === '') {
+        if (this.isFieldRequired(this.file) && this.fileKey.trim() === '') {
           emptyFields.push('XU Official Receipt');
         }
         
@@ -276,7 +276,7 @@ export default {
         if (this.isFieldRequired(this.transfer_form_number) && this.transfer_form_number.trim() === ''){
           emptyFields.push('Transfer Form No')
         }
-        if (this.isFieldRequired(this.fileKey) && this.fileKey.trim() === '') {
+        if (this.isFieldRequired(this.file) && this.fileKey.trim() === '') {
           emptyFields.push('Accomplished Transfer Form w/ MR');
         }
       }
@@ -288,7 +288,7 @@ export default {
         if (this.isFieldRequired(this.borrowed_return_date) && this.borrowed_return_date.trim() === '') {
           emptyFields.push('Date item returned');
         }
-        if (this.isFieldRequired(this.fileKey) && this.fileKey.trim() === '') {
+        if (this.isFieldRequired(this.file) && this.fileKey.trim() === '') {
           emptyFields.push('Request to Borrow Form');
         }
       }
@@ -300,7 +300,7 @@ export default {
         if (this.isFieldRequired(this.repair_company) && this.repair_company.trim() === '') {
           emptyFields.push('Company');
         }
-        if (this.isFieldRequired(this.fileKey) && this.fileKey.trim() === '') {
+        if (this.isFieldRequired(this.file) && this.fileKey.trim() === '') {
           emptyFields.push('Assessment from CISO or PPO');
         }
       }
