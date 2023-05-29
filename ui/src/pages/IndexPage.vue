@@ -58,7 +58,7 @@
                   <!-- </router-link> -->
 
 
-                    <div class="text sign-up-text">Don't have an account? <label for="flip">Sigup now</label></div>
+                    <div class="text sign-up-text">Don't have an account? <label for="flip">Signup now</label></div>
                   </div>
 
                 </form>
@@ -142,96 +142,98 @@ methods: {
       } else {
         this.errors = null;
       }
-    }
   },
+  
 
   async handleLogin() {
-  const loginResult = await this.login();
+    const loginResult = await this.login();
 
-  if (loginResult) {
+    if (loginResult) {
     // Proceed with the redirection
     this.$router.push('/dashboard');
-  } else {
+    } else {
     // Display an error message or handle the failed login scenario
     console.log('Login failed. Please try again.');
-  }
-},
-  
-async login() {
-  try {
-    const response = await api.get('api/login', {
-      params: {
-        email: this.email,
-        password: this.password
-      }
-    });
-
-    const { data } = response;
-
-    if (response.status === 200) {
-      // Login successful
-      this.$router.push('/dashboard');
-      console.log(data.message);
-      return true;
-      // Proceed with next code...
-    } else  {
-      // Handle different error scenarios
-      alert(data.message);
-      console.log(data.message);
-      return false;
     }
-    
-  } catch (error) {
-    this.errorMsg = "Invalid username or password.";
-    console.error(error);
-    return false;
-  }
-},
+  },
+  
+  async login() {
+    try {
+      const response = await api.get('api/login', {
+        params: {
+          email: this.email,
+          password: this.password
+        }
+      });
 
-async handleSignup() {
-    const signupResult = await this.signup();
+      const { data } = response;
 
-    if (signupResult) {
-      // Proceed with the redirection
-      this.signup_verify = "Verify Email then Login";
-    } else {
-      // Display an error message or handle the failed login scenario
-      console.log('Signup failed. Please try again.');
+      if (response.status === 200) {
+        // Login successful
+        this.$router.push('/dashboard');
+        console.log(data.message);
+        return true;
+        // Proceed with next code...
+      } else  {
+        // Handle different error scenarios
+        alert(data.message);
+        console.log(data.message);
+        return false;
+      }
+      
+    } catch (error) {
+      this.errorMsg = "Invalid username or password.";
+      console.error(error);
+      return false;
     }
   },
 
-async signup() {
-  try {
-    const response = await api.post('api/signup', {
-      params: {
-        username: this.username,
-        email: this.email,
-        password: this.password
+  async handleSignup() {
+      const signupResult = await this.signup();
+
+      if (signupResult) {
+        // Proceed with the redirection
+        this.signup_verify = "Verify Email then Login";
+      } else {
+        // Display an error message or handle the failed login scenario
+        console.log('Signup failed. Please try again.');
       }
-    });
+    },
 
-    console.log(response.data); 
-    this.signup_verify = "Verify Email then Login. Check your Spam if it's not in inbox";
+  async signup() {
+    console.log("Hello");
+    try {
+      const response = await api.post('api/signup', {
+        params: {
+          username: this.username,
+          email: this.email,
+          password: this.password
+        }
+      });
 
-    const { data } = response;
+      console.log(response.data); 
+      this.signup_verify = "Verify Email then Login. Check your Spam if it's not in inbox";
 
-    if (response.status === 201) {
-      this.$router.push('/');
-      console.log(data.message);
-      return true;
-    } else {
-      // Handle different error scenarios
-      this.signup_verify = data.message;
-      alert(data.message);
-      console.log(data.message);
+      const { data } = response;
+
+      if (response.status === 200) {
+        this.$router.push('/');
+        console.log(data.message);
+        return true;
+      } else {
+        // Handle different error scenarios
+        this.signup_verify = data.message;
+        alert(data.message);
+        console.log(data.message);
+        return false;
+      }
+      
+    } catch (error) {
+      console.error(error);
       return false;
     }
-      
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
-},
+  },
+}
 };
 </script>
 
