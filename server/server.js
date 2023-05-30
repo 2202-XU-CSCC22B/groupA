@@ -10,7 +10,7 @@ const Router = require("./routes");
 mongoose.set("strictQuery", false);
 
 const app = express();
-const PORT = 4500;
+const PORT = 3000;
 
 
 const pass = "ExitPass123";
