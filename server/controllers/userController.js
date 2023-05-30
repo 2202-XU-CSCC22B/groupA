@@ -38,7 +38,7 @@ const signup = async (request, response) => {
     console.log(token);
 
     // Send mail
-    const link = `http://localhost:3000/api/confirm/${token.token}`;
+    const link = `http://localhost:4500/api/confirm/${token.token}`;
     // const link = `http://localhost:8080/`;
 
     const verify = await verifmail(user.email, link);
